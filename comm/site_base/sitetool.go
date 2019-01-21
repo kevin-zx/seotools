@@ -5,8 +5,8 @@ import (
 	"github.com/kevin-zx/go-util/httpUtil"
 	"strings"
 
+	"github.com/kevin-zx/seotools/comm/baidu"
 	"net/url"
-	"seotools/comm/baidu"
 )
 
 type WebPageSeoInfo struct {
