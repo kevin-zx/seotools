@@ -1,4 +1,4 @@
-module seotools
+module github.com/kevin-zx/seotools
 
 require (
 	github.com/PuerkitoBio/goquery v1.5.0
