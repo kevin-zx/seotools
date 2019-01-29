@@ -1,3 +1,4 @@
+// 5118 网站百度pc关键词排名接口
 package api_5118
 
 import (
@@ -23,10 +24,10 @@ type BaiduPCResult struct {
 }
 
 //
-func ExportBaiduPcSearchResults(siteDomain string, pageIndex int, app_key string) (baiduPcResults *[]BaiduPCResult, totalPage uint64, err error) {
+func ExportBaiduPcSearchResults(siteDomain string, pageIndex int, appKey string) (baiduPcResults *[]BaiduPCResult, totalPage uint64, err error) {
 	header := map[string]string{
 		//"Content-type":"text/html; charset=utf-8",
-		"Authorization": "APIKEY " + app_key,
+		"Authorization": "APIKEY " + appKey,
 	}
 	val := url.Values{"url": {siteDomain}, "page_index": {strconv.Itoa(pageIndex)}}
 	postDataStr := val.Encode()
