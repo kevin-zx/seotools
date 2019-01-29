@@ -13,14 +13,14 @@ import (
 
 type LongWord struct {
 	Keyword             string `json:"keyword"`
-	BaiduIndex          uint64 `json:"baidu_index"`
-	LongKeywordCount    uint64 `json:"long_keyword_count"`
-	CollectCount        uint64 `json:"collect_count"`         //搜索结果数
-	BidwordCompanyCount uint64 `json:"bidword_company_count"` //竞价公司数量
+	BaiduIndex          int    `json:"baidu_index"`
+	LongKeywordCount    int    `json:"long_keyword_count"`
+	CollectCount        int    `json:"collect_count"`         //搜索结果数
+	BidwordCompanyCount int    `json:"bidword_company_count"` //竞价公司数量
 	PageUrl             string `json:"page_url"`              // 推荐网站
-	BidwordKwc          uint64 `json:"bidword_kwc"`           //竞价竞争激烈程度
-	BidwordPcpv         uint64 `json:"bidword_pcpv"`          //百度PC检索量
-	BidwordWisepv       uint64 `json:"bidword_wisepv"`        //百度移动检索量
+	BidwordKwc          int    `json:"bidword_kwc"`           //竞价竞争激烈程度
+	BidwordPcpv         int    `json:"bidword_pcpv"`          //百度PC检索量
+	BidwordWisepv       int    `json:"bidword_wisepv"`        //百度移动检索量
 }
 
 func GetLongWordByKeyword(keyword string, pageIndex int, pageSize int, appKey string) (lws *[]LongWord, totalPage uint64, err error) {
