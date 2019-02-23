@@ -5,7 +5,6 @@ require (
 	github.com/antchfx/htmlquery v0.0.0-20181228060131-db5c1236cbb4 // indirect
 	github.com/antchfx/xmlquery v0.0.0-20181223105952-355641961c92 // indirect
 	github.com/antchfx/xpath v0.0.0-20181208024549-4bbdf6db12aa // indirect
-	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/bitly/go-simplejson v0.5.0
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
@@ -17,6 +16,6 @@ require (
 	github.com/temoto/robotstxt v0.0.0-20180810133444-97ee4a9ee6ea // indirect
 	github.com/tidwall/gjson v1.1.5
 	github.com/tidwall/match v1.0.1 // indirect
-	golang.org/x/net v0.0.0-20190125091013-d26f9f9a57f3
-	golang.org/x/text v0.3.0
+	golang.org/x/net v0.0.0-20190125091013-d26f9f9a57f3 // indirect
+	golang.org/x/sync v0.0.0-20181221193216-37e7f081c4d4 // indirect
 )

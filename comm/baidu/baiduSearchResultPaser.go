@@ -101,11 +101,53 @@ func MatchRankByDisplayUrl(srs *[]SearchResult, displayUrl string) (rank int) {
 	return MatchRank(srs, "", displayUrl, "", "")
 }
 
+// 匹配排名，根据真实url
+func MatchRankByReal(srs *[]SearchResult, realUrl string) (rank int) {
+	//先获取没有协议的真实url
+	realUrlWithoutProtocol := strings.Replace(realUrl, "http://", "", 1)
+	realUrlWithoutProtocol = strings.Replace(realUrlWithoutProtocol, "https://", "", 1)
+
+	//第一遍先用display匹配一次
+	for _, sr := range *srs {
+		// 如果有displayUrl 先和 displayUrl进行匹配
+		if sr.DisplayUrl != "" && !strings.Contains(sr.DisplayUrl, "...") {
+			//这里因为displayUrl还有可能是https的
+			if strings.HasSuffix(sr.DisplayUrl, realUrlWithoutProtocol) || strings.HasSuffix(sr.DisplayUrl, realUrlWithoutProtocol+"/") {
+				// 百度对于一次搜索结果的url应该具有唯一性， 匹配到就返回
+				rank = sr.Rank
+				return
+			}
+		}
+	}
+
+	// 这一遍用realUrl匹配了
+	for _, sr := range *srs {
+		if sr.DisplayUrl != "" || (sr.DisplayUrl == "" && sr.SiteName == "") {
+			continue
+		}
+
+		// 排除百度系
+		// 但是这个不合理,万一real是百度就出错了不过为了减少查询次数，还是加上
+		if strings.Contains(sr.DisplayUrl, "baidu.com") || strings.Contains(sr.SiteName, "百度") {
+			continue
+		}
+
+		if sr.BaiduURL != "" {
+			sr.RealUrl = DecodeBaiduEncURL(sr.BaiduURL)
+			if strings.HasSuffix(sr.RealUrl, realUrlWithoutProtocol) || strings.HasSuffix(sr.RealUrl, realUrlWithoutProtocol+"/") {
+				// 百度对于一次搜索结果的url应该具有唯一性， 匹配到就返回
+				rank = sr.Rank
+				return
+			}
+		}
+	}
+	return
+}
+
 // 匹配排名 根据多重条件
 // domain  displayUrl siteName 属于非强制型匹配， 即匹配不上还会进行其它项匹配
 // title 属于强制型匹配 匹配不上则 直接判定匹配不上
 func MatchRank(srs *[]SearchResult, domain string, displayUrl string, siteName string, title string) (rank int) {
-
 	for _, sr := range *srs {
 		matchFlag := false
 
@@ -154,6 +196,11 @@ func MatchRank(srs *[]SearchResult, domain string, displayUrl string, siteName s
 
 	}
 	return
+}
+
+// 获取一个站的首页位置，一般是配合site使用
+func GetFirstHomePageRank(srs *[]SearchResult, domain string) (rank int) {
+	return MatchRankByReal(srs, "http://"+domain)
 }
 
 const MobilePort = "mobile"
