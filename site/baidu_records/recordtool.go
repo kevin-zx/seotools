@@ -4,11 +4,11 @@ package baidu_records
 import (
 	"errors"
 	"fmt"
+	"github.com/kevin-zx/go-util/wd_crawler"
 	"log"
 	"net/url"
 	"strings"
 	"sync"
-	"wd_crawler"
 )
 
 const baiduSearchAvailableLen = 76
