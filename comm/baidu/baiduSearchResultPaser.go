@@ -124,8 +124,10 @@ func MatchRankByReal(srs *[]SearchResult, realUrl string) (rank int) {
 	for _, sr := range *srs {
 		// 如果有displayUrl 先和 displayUrl进行匹配
 		if sr.DisplayUrl != "" && !strings.Contains(sr.DisplayUrl, "...") {
-			//这里因为displayUrl还有可能是https的
-			if strings.HasSuffix(sr.DisplayUrl, realUrlWithoutProtocol) || strings.HasSuffix(sr.DisplayUrl, realUrlWithoutProtocol+"/") {
+			// 这里可以直接获取real
+			_ = sr.GetPCRealUrl()
+			//这里因为 RealUrl 还有可能是https的
+			if strings.HasSuffix(sr.RealUrl, realUrlWithoutProtocol) || strings.HasSuffix(sr.RealUrl, realUrlWithoutProtocol+"/") {
 				// 百度对于一次搜索结果的url应该具有唯一性， 匹配到就返回
 				rank = sr.Rank
 				return
