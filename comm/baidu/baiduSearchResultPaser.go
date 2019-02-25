@@ -24,7 +24,20 @@ type SearchResult struct {
 }
 
 func (sr *SearchResult) GetPCRealUrl() error {
-	sr.RealUrl = DecodeBaiduEncURL(sr.BaiduURL)
+	if sr.RealUrl != "" {
+		// 如果displayUrl可以作为real则不用发送请求了
+		if sr.SiteName == "" && sr.DisplayUrl != "" && !strings.Contains(sr.DisplayUrl, "...") {
+			if strings.Contains(sr.DisplayUrl, "https://") {
+				sr.RealUrl = "http://" + sr.DisplayUrl
+
+			} else {
+				sr.RealUrl = sr.DisplayUrl
+			}
+		} else {
+			sr.RealUrl = DecodeBaiduEncURL(sr.BaiduURL)
+		}
+	}
+
 	return nil
 }
 
@@ -133,7 +146,7 @@ func MatchRankByReal(srs *[]SearchResult, realUrl string) (rank int) {
 		}
 
 		if sr.BaiduURL != "" {
-			sr.RealUrl = DecodeBaiduEncURL(sr.BaiduURL)
+			_ = sr.GetPCRealUrl()
 			if strings.HasSuffix(sr.RealUrl, realUrlWithoutProtocol) || strings.HasSuffix(sr.RealUrl, realUrlWithoutProtocol+"/") {
 				// 百度对于一次搜索结果的url应该具有唯一性， 匹配到就返回
 				rank = sr.Rank
