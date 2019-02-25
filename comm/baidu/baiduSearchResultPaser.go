@@ -24,7 +24,7 @@ type SearchResult struct {
 }
 
 func (sr *SearchResult) GetPCRealUrl() error {
-	if sr.RealUrl != "" {
+	if sr.RealUrl == "" {
 		// 如果displayUrl可以作为real则不用发送请求了
 		if sr.SiteName == "" && sr.DisplayUrl != "" && !strings.Contains(sr.DisplayUrl, "...") {
 			if strings.Contains(sr.DisplayUrl, "https://") {
