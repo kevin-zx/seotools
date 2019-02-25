@@ -48,3 +48,12 @@ func combineMobileUrl(keyword string, page int) string {
 	mobileSearchUrl := fmt.Sprintf(mobileSearchUrlBase, pn, keyword)
 	return mobileSearchUrl
 }
+
+func GetBaiduPcResultsByKeyword(keyword string, page int, rn int) (baiduResults *[]SearchResult, err error) {
+	webCon, err := GetBaiduPCSearchHtmlWithRN(keyword, page, rn)
+	if err != nil {
+		return
+	}
+	baiduResults, err = ParseBaiduPCSearchResultHtml(webCon)
+	return
+}
