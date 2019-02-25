@@ -121,11 +121,12 @@ func MatchRankByReal(srs *[]SearchResult, realUrl string) (rank int) {
 	realUrlWithoutProtocol = strings.Replace(realUrlWithoutProtocol, "https://", "", 1)
 
 	//第一遍先用display匹配一次
-	for _, sr := range *srs {
+	for i, sr := range *srs {
 		// 如果有displayUrl 先和 displayUrl进行匹配
 		if sr.DisplayUrl != "" && !strings.Contains(sr.DisplayUrl, "...") {
 			// 这里可以直接获取real
-			_ = sr.GetPCRealUrl()
+			_ = (*srs)[i].GetPCRealUrl()
+			sr = (*srs)[i]
 			//这里因为 RealUrl 还有可能是https的
 			if strings.HasSuffix(sr.RealUrl, realUrlWithoutProtocol) || strings.HasSuffix(sr.RealUrl, realUrlWithoutProtocol+"/") {
 				// 百度对于一次搜索结果的url应该具有唯一性， 匹配到就返回
@@ -136,7 +137,7 @@ func MatchRankByReal(srs *[]SearchResult, realUrl string) (rank int) {
 	}
 
 	// 这一遍用realUrl匹配了
-	for _, sr := range *srs {
+	for i, sr := range *srs {
 		if sr.DisplayUrl != "" || (sr.DisplayUrl == "" && sr.SiteName == "") {
 			continue
 		}
@@ -148,7 +149,8 @@ func MatchRankByReal(srs *[]SearchResult, realUrl string) (rank int) {
 		}
 
 		if sr.BaiduURL != "" {
-			_ = sr.GetPCRealUrl()
+			_ = (*srs)[i].GetPCRealUrl()
+			sr = (*srs)[i]
 			if strings.HasSuffix(sr.RealUrl, realUrlWithoutProtocol) || strings.HasSuffix(sr.RealUrl, realUrlWithoutProtocol+"/") {
 				// 百度对于一次搜索结果的url应该具有唯一性， 匹配到就返回
 				rank = sr.Rank
