@@ -14,7 +14,10 @@ func TestGetRecordFromDomain(t *testing.T) {
 }
 
 func TestGetRecordInfo(t *testing.T) {
-	testInstances := []string{"www.centek.com.cn", "www.cqjyxzs.com"}
+	testInstances := []string{
+		//"www.centek.com.cn",
+		//"www.cqjyxzs.com",
+		"www.cqzkwx.com"}
 	for _, ti := range testInstances {
 		rci, err := GetRecordInfo(ti)
 		if err != nil {

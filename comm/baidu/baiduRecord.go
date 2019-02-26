@@ -40,7 +40,7 @@ type KeywordRecordInfo struct {
 
 func GetKeywordSiteRecordInfo(keyword string, domain string) (kri *KeywordRecordInfo, err error) {
 	kri = &KeywordRecordInfo{Keyword: keyword}
-	pageData, err := GetBaiduPCSearchHtmlWithRN("site:"+strings.Replace(domain, "wwww.", "", 1)+" "+keyword, 1, 20)
+	pageData, err := GetBaiduPCSearchHtmlWithRN("site:"+strings.Replace(domain, "www.", "", 1)+" "+keyword, 1, 20)
 	if err != nil {
 		return
 	}
@@ -80,7 +80,7 @@ type RecordInfo struct {
 // 根据网站 域名 名称（熊掌号名称） 主页title 获取收录信息  siteName homePageTitle 为空则可以不填
 func GetRecordInfo(domain string) (rci *RecordInfo, err error) {
 	rci = &RecordInfo{}
-	pageData, err := GetBaiduPCSearchHtmlWithRN("site:"+strings.Replace(domain, "wwww.", "", 1), 1, 20)
+	pageData, err := GetBaiduPCSearchHtmlWithRN("site:"+strings.Replace(domain, "www.", "", 1), 1, 20)
 	if err != nil {
 		return
 	}
@@ -121,8 +121,9 @@ func GetRecordInfo(domain string) (rci *RecordInfo, err error) {
 	// 百度简略显示收录的方式
 	siteTipsRecord := doc.Find("div.c-border.c-row.site_tip b")
 	if siteTipsRecord != nil && siteTipsRecord.Size() > 0 {
-		recordStr := strings.Replace(siteTipsRecord.Text(), "找到相关结果数约", "", 1)[0:1]
+		recordStr := strings.Replace(siteTipsRecord.Text(), "找到相关结果数约", "", 1)[0:]
 		recordStr = strings.Replace(recordStr, ",", "", -1)
+		recordStr = strings.Replace(recordStr, "个", "", -1)
 		rci.Record, err = strconv.Atoi(recordStr)
 		if err != nil {
 			return
