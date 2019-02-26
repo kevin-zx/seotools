@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/kevin-zx/go-util/httpUtil"
 	"net/url"
+	"strings"
 )
 
 // 百度pc端
@@ -26,6 +27,7 @@ const PCSearchUrlBase = "https://www.baidu.com/s?wd=%s&rn=%d&pn=%d"
 
 func combinePcSearchUrl(wd string, rn int, pageNum int) string {
 	wd = url.QueryEscape(wd)
+	wd = strings.Replace(wd, "+", "%20", -1)
 	pn := rn * (pageNum - 1)
 	PcSearchUrl := fmt.Sprintf(PCSearchUrlBase, wd, rn, pn)
 	return PcSearchUrl
@@ -45,6 +47,7 @@ const mobileSearchUrlBase = "https://www.baidu.com/from=844b/s?pn=%d&word=%s&ms=
 
 func combineMobileUrl(keyword string, page int) string {
 	keyword = url.QueryEscape(keyword)
+	keyword = strings.Replace(keyword, "+", "%20", -1)
 	pn := (page - 1) * 10
 	mobileSearchUrl := fmt.Sprintf(mobileSearchUrlBase, pn, keyword)
 	return mobileSearchUrl
