@@ -15,7 +15,6 @@ func GetBaiduPCSearchHtml(keyword string, page int) (string, error) {
 
 func GetBaiduPCSearchHtmlWithRN(keyword string, page int, rn int) (string, error) {
 	sUrl := combinePcSearchUrl(keyword, rn, page)
-	fmt.Println(sUrl)
 	webCon, err := httpUtil.GetWebConFromUrlWithHeader(sUrl, map[string]string{"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36"})
 	if err != nil {
 		return "", err
