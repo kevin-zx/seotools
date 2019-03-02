@@ -29,8 +29,9 @@ func TestGetRecordInfo(t *testing.T) {
 
 func TestGetKeywordSiteRecordInfo(t *testing.T) {
 	testInstances := [][]string{
-		{"www.cqjyxzs.com", "家装设计"},
-		{"www.centek.com.cn", "养老"},
+		//{"www.cqjyxzs.com", "家装设计"},
+		//{"www.centek.com.cn", "养老"},
+		{"www.cqzkwx.com", "重庆自考查询"},
 	}
 
 	for _, ti := range testInstances {

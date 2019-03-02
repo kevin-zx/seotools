@@ -26,7 +26,6 @@ type BaiduPCResult struct {
 //
 func ExportBaiduPcSearchResults(siteDomain string, pageIndex int, appKey string) (baiduPcResults *[]BaiduPCResult, totalPage uint64, err error) {
 	header := map[string]string{
-		//"Content-type":"text/html; charset=utf-8",
 		"Authorization": "APIKEY " + appKey,
 	}
 	val := url.Values{"url": {siteDomain}, "page_index": {strconv.Itoa(pageIndex)}}
