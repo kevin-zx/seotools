@@ -19,7 +19,7 @@ func KeywordMatchInfoGet(keyword string) (kmi *KeywordMatchInfo, err error) {
 		return
 	}
 	if bsrs != nil && len(*bsrs) > 0 {
-		kmi = &KeywordMatchInfo{}
+		kmi = &KeywordMatchInfo{Keyword: keyword}
 		var titleMatchRateTotal float64
 		var descriptionMatchRateTotal float64
 		var titleFullMatchCountTotal int
