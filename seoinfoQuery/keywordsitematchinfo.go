@@ -14,13 +14,21 @@ type KeywordSiteMatchInfo struct {
 	FirstPageMatchInfo MatchInfo `json:"first_page_match_info"`
 }
 
-func KeywordSiteMatchInfoQuery(keyword string, domain string) (ksi *KeywordSiteMatchInfo, err error) {
+func KeywordSiteMatchInfoQuery(keyword string, domain string, port DevicePort) (ksi *KeywordSiteMatchInfo, err error) {
 	ksi = &KeywordSiteMatchInfo{Keyword: keyword, Domain: domain}
 	kri := &baidu.KeywordRecordInfo{}
-	kri, err = baidu.GetKeywordSiteRecordInfo(keyword, domain)
-	if err != nil {
-		return
+	if port == PC {
+		kri, err = baidu.GetPCKeywordSiteRecordInfo(keyword, domain)
+		if err != nil {
+			return
+		}
+	} else {
+		kri, err = baidu.GetMobileKeywordSiteRecordInfo(keyword, domain)
+		if err != nil {
+			return
+		}
 	}
+
 	ksi.KeywordRecord = kri.Record
 	ksi.KeywordRecordHomePageIndex = kri.HomePageRank
 

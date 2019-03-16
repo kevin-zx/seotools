@@ -8,10 +8,14 @@ type SiteSeoInfo struct {
 	RecordHomePageIndex int    `json:"record_home_page_index"`
 }
 
-func SiteInfoQuery(domain string) (ss *SiteSeoInfo, err error) {
+func SiteInfoQuery(domain string, port DevicePort) (ss *SiteSeoInfo, err error) {
 	ss = &SiteSeoInfo{Domain: domain}
 	rci := &baidu.RecordInfo{}
-	rci, err = baidu.GetRecordInfo(domain)
+	if port == Mobile {
+		rci, err = baidu.GetMobileRecordInfo(domain)
+	} else {
+		rci, err = baidu.GetPCRecordInfo(domain)
+	}
 	ss.RecordHomePageIndex = rci.HomePageRank
 	ss.Record = rci.Record
 	return

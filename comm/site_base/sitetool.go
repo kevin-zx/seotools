@@ -32,7 +32,7 @@ func ParseWebSeoFromHtml(html string) (*WebPageSeoInfo, error) {
 }
 
 func (wpi *WebPageSeoInfo) GetBaiduRecordCount() error {
-	rc, err := baidu.GetRecordFromDomain(strings.Replace(wpi.RealUrl.Host, "www.", "", 1))
+	rc, err := baidu.GetPCRecordFromDomain(strings.Replace(wpi.RealUrl.Host, "www.", "", 1))
 	if err != nil {
 		return err
 	}

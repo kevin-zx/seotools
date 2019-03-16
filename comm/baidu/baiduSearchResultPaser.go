@@ -246,15 +246,42 @@ func ParseBaiduMobileSearchResultHtml(html string, page int) (*[]SearchResult, e
 		}
 		dataLogJson, err := simplejson.NewFromReader(strings.NewReader(strings.Replace(data_log, "'", "\"", -1)))
 		if err != nil {
-			fmt.Printf("data_log json 化出词，data_log: %s, errinfo:%s\n", data_log, err.Error())
+			fmt.Printf("data_log json 化出错，data_log: %s, errinfo:%s\n", data_log, err.Error())
 			return
 		}
 		mu, err := dataLogJson.Get("mu").String()
 		if err != nil {
-			fmt.Printf("data_log json 化出词，data_log: %s, errinfo:%s\n", data_log, err.Error())
+			fmt.Printf("data_log json 化出错，data_log: %s, errinfo:%s\n", data_log, err.Error())
 			return
 		}
+		//title 处理
+		titleEle := resultEle.Find("h3.c-title")
+		if titleEle != nil {
+			result.Title = titleEle.Text()
+			result.TitleMatchWords = getRedWords(titleEle)
+		}
+
+		// description 处理
+		descriptionEle := resultEle.Find("div.c-abstract.c-row")
+		if descriptionEle != nil {
+			result.BaiduDescription = descriptionEle.Text()
+			result.BaiduDescriptionMatchWords = getRedWords(descriptionEle)
+		}
+
+		// 获取百度url
+		baiduA := resultEle.Find("a.c-blocka")
+		if baiduA != nil {
+			result.BaiduURL, _ = baiduA.Attr("href")
+		}
+		// 处理siteName div.c-row span.c-color-gray
+		siteNameElement := resultEle.Find("div.c-row span.c-color-gray").First()
+		if siteNameElement != nil {
+			result.SiteName = siteNameElement.Text()
+
+		}
+
 		result.RealUrl = mu
+		result.DisplayUrl = mu
 		resultType, _ := dataLogJson.Get("ensrcid").String()
 		result.Type = resultType
 
@@ -262,4 +289,12 @@ func ParseBaiduMobileSearchResultHtml(html string, page int) (*[]SearchResult, e
 
 	})
 	return &results, nil
+}
+
+func getRedWords(element *goquery.Selection) (words []string) {
+	words = []string{}
+	element.Find("em").Each(func(_ int, redElement *goquery.Selection) {
+		words = append(words, redElement.Text())
+	})
+	return
 }

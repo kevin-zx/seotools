@@ -12,9 +12,13 @@ type KeywordMatchInfo struct {
 	DescriptionAvgKeywordMatchRate      float64 `json:"description_avg_keyword_match_rate"`
 }
 
-func KeywordMatchInfoGet(keyword string) (kmi *KeywordMatchInfo, err error) {
+func KeywordMatchInfoGet(keyword string, port DevicePort) (kmi *KeywordMatchInfo, err error) {
 	var bsrs *[]baidu.SearchResult
-	bsrs, err = baidu.GetBaiduPcResultsByKeyword(keyword, 1, 10)
+	if port == PC {
+		bsrs, err = baidu.GetBaiduPcResultsByKeyword(keyword, 1, 10)
+	} else {
+		bsrs, err = baidu.GetBaiduMobileResultsByKeyword(keyword, 1)
+	}
 	if err != nil {
 		return
 	}
@@ -28,6 +32,9 @@ func KeywordMatchInfoGet(keyword string) (kmi *KeywordMatchInfo, err error) {
 		var avgDescriptionKeywordMatchRateTotal float64
 		var count float64
 		for _, bsr := range *bsrs {
+			if bsr.Type != "" && bsr.Type != "www_normal" && bsr.Type != "h5_mobile" {
+				continue
+			}
 			if bsr.Rank > 10 {
 				break
 			}

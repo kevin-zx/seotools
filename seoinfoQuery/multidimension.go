@@ -9,8 +9,15 @@ type MultiResult struct {
 	KeywordSiteMatchInfo *KeywordSiteMatchInfo
 }
 
+type DevicePort int
+
+const (
+	PC = iota
+	Mobile
+)
+
 // task [][]string{ []{domain,keyword}}
-func MultiQuery(tasks [][]string) (mrs []*MultiResult, err error) {
+func MultiQuery(tasks [][]string, dp DevicePort) (mrs []*MultiResult, err error) {
 	kmiMap := make(map[string]*KeywordMatchInfo)
 	ksmiMap := make(map[string]*KeywordSiteMatchInfo)
 	ssMap := make(map[string]*SiteSeoInfo)
@@ -22,7 +29,7 @@ func MultiQuery(tasks [][]string) (mrs []*MultiResult, err error) {
 		if v, ok := kmiMap[keyword]; ok {
 			mr.KeywordMatchInfo = v
 		} else {
-			mr.KeywordMatchInfo, err = KeywordMatchInfoGet(keyword)
+			mr.KeywordMatchInfo, err = KeywordMatchInfoGet(keyword, dp)
 			if err != nil {
 				return
 			}
@@ -32,7 +39,7 @@ func MultiQuery(tasks [][]string) (mrs []*MultiResult, err error) {
 		if v, ok := ksmiMap[keyword+domain]; ok {
 			mr.KeywordSiteMatchInfo = v
 		} else {
-			mr.KeywordSiteMatchInfo, err = KeywordSiteMatchInfoQuery(keyword, domain)
+			mr.KeywordSiteMatchInfo, err = KeywordSiteMatchInfoQuery(keyword, domain, dp)
 			if err != nil {
 				return
 			}
@@ -41,7 +48,7 @@ func MultiQuery(tasks [][]string) (mrs []*MultiResult, err error) {
 		if v, ok := ssMap[domain]; ok {
 			mr.SiteSeoInfo = v
 		} else {
-			mr.SiteSeoInfo, err = SiteInfoQuery(domain)
+			mr.SiteSeoInfo, err = SiteInfoQuery(domain, dp)
 			if err != nil {
 				return
 			}

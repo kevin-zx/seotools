@@ -1,12 +1,13 @@
 package baidu
 
 import (
+	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"strconv"
 	"strings"
 )
 
-func GetRecordFromDomain(domain string) (int, error) {
+func GetPCRecordFromDomain(domain string) (int, error) {
 	pageData, err := GetBaiduPCSearchHtmlWithRN("site:"+domain, 1, 20)
 	if err != nil {
 		return 0, err
@@ -38,7 +39,7 @@ type KeywordRecordInfo struct {
 	Keyword string
 }
 
-func GetKeywordSiteRecordInfo(keyword string, domain string) (kri *KeywordRecordInfo, err error) {
+func GetPCKeywordSiteRecordInfo(keyword string, domain string) (kri *KeywordRecordInfo, err error) {
 	kri = &KeywordRecordInfo{Keyword: keyword}
 	pageData, err := GetBaiduPCSearchHtmlWithRN("site:"+strings.Replace(domain, "www.", "", 1)+" "+keyword, 1, 20)
 	if err != nil {
@@ -70,6 +71,42 @@ func GetKeywordSiteRecordInfo(keyword string, domain string) (kri *KeywordRecord
 	return
 }
 
+func GetMobileKeywordSiteRecordInfo(keyword string, domain string) (kri *KeywordRecordInfo, err error) {
+	kri = &KeywordRecordInfo{Keyword: keyword}
+	rs, err := GetBaiduMobileResultsByKeyword("site:"+strings.Replace(domain, "www.", "", 1)+" "+keyword, 1)
+
+	if len(*rs) == 0 {
+		return
+	}
+	kri.HomePageRank = GetFirstHomePageRank(rs, domain)
+	kri.SearchResults = rs
+	for _, r := range *rs {
+		if r.SiteName != "" && r.SiteName != "总收录量：" {
+			kri.SiteName = r.SiteName
+			break
+		}
+	}
+
+	if len(*rs) >= 1 && kri.Record == 0 {
+		if (*rs)[len(*rs)-1].Rank != 10 {
+			kri.Record = len(*rs)
+		} else {
+			var sRs *[]SearchResult
+			sRs, err = GetBaiduMobileResultsByKeyword("site:"+domain, 2)
+			if err != nil {
+				return
+			}
+			if len(*sRs) < 10 {
+				kri.Record = 10 + len(*sRs)
+			} else {
+				kri.Record = 21
+			}
+		}
+	}
+
+	return
+}
+
 type RecordInfo struct {
 	Record        int
 	HomePageRank  int
@@ -78,7 +115,7 @@ type RecordInfo struct {
 }
 
 // 根据网站 域名 名称（熊掌号名称） 主页title 获取收录信息  siteName homePageTitle 为空则可以不填
-func GetRecordInfo(domain string) (rci *RecordInfo, err error) {
+func GetPCRecordInfo(domain string) (rci *RecordInfo, err error) {
 	rci = &RecordInfo{}
 	pageData, err := GetBaiduPCSearchHtmlWithRN("site:"+strings.Replace(domain, "www.", "", 1), 1, 20)
 	if err != nil {
@@ -128,6 +165,77 @@ func GetRecordInfo(domain string) (rci *RecordInfo, err error) {
 		if err != nil {
 			return
 		}
+	}
+	return
+}
+
+func GetMobileRecordInfo(domain string) (rci *RecordInfo, err error) {
+	rci = &RecordInfo{}
+	webCon, err := GetBaiduMobileSearchHtml("site:"+domain, 1)
+	if err != nil {
+		return
+	}
+	rs, err := ParseBaiduMobileSearchResultHtml(webCon, 1)
+	if err != nil {
+		return
+	}
+	if len(*rs) == 0 {
+		return
+	}
+	if len(*rs) >= 0 && (*rs)[0].Type == "2H5" {
+		var doc *goquery.Document
+		doc, err = goquery.NewDocumentFromReader(strings.NewReader(webCon))
+		if err != nil {
+			return
+		}
+		recordEle := doc.Find("#results>div.c-result span.c-color-orange").First()
+		if recordEle != nil {
+			rci.Record = recordStr2Record(recordEle.Text())
+		}
+	}
+
+	if len(*rs) >= 1 && rci.Record == 0 {
+		if (*rs)[len(*rs)-1].Rank != 10 {
+			rci.Record = len(*rs)
+		} else {
+			var sRs *[]SearchResult
+			sRs, err = GetBaiduMobileResultsByKeyword("site:"+domain, 2)
+			if err != nil {
+				return
+			}
+			if len(*sRs) < 10 {
+				rci.Record = 10 + len(*sRs)
+			} else {
+				rci.Record = 21
+			}
+		}
+	}
+
+	rci.HomePageRank = GetFirstHomePageRank(rs, domain)
+	rci.SearchResults = rs
+	for _, r := range *rs {
+		if r.SiteName != "" && r.SiteName != "总收录量：" {
+			rci.SiteName = r.SiteName
+			break
+		}
+	}
+
+	return
+}
+
+func recordStr2Record(recordStr string) (record int) {
+	recordStr = strings.Replace(recordStr, "亿", "", -1)
+	recordStr = strings.Replace(recordStr, "个", "", -1)
+	recordStr = strings.Replace(recordStr, ",", "", -1)
+	//是否有万
+	wMatchFlag := strings.Index(recordStr, "万") >= 0
+	recordStr = strings.Replace(recordStr, "万", "", -1)
+	record, err := strconv.Atoi(recordStr)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	if wMatchFlag {
+		return record * 10000
 	}
 	return
 }

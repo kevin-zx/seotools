@@ -46,3 +46,15 @@ func TestMatchRank(t *testing.T) {
 	}
 
 }
+
+func TestParseBaiduMobileSearchResultHtml(t *testing.T) {
+	html, err := GetBaiduMobileSearchHtml("四川阀门生产厂家", 1)
+	if err != nil {
+		panic(err)
+	}
+	rs, err := ParseBaiduMobileSearchResultHtml(html, 1)
+	for _, r := range *rs {
+		fmt.Printf("%v\n", r)
+	}
+
+}
