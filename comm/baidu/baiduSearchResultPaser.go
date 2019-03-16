@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/bitly/go-simplejson"
+	"github.com/kevin-zx/seotools/comm/urlhandler"
 	"strconv"
 	"strings"
 )
@@ -36,8 +37,39 @@ func (sr *SearchResult) GetPCRealUrl() error {
 			sr.RealUrl = DecodeBaiduEncURL(sr.BaiduURL)
 		}
 	}
-
 	return nil
+}
+
+func (sr *SearchResult) IsHomePage() bool {
+	if sr.Port == MobilePort {
+		if sr.RealUrl != "" {
+			domain, _ := urlhandler.GetDomain(sr.RealUrl)
+			if domain != "" && strings.HasSuffix(strings.Replace(sr.RealUrl, "/", "", -1), domain) {
+				return true
+			}
+		}
+	} else {
+		domain := ""
+		if sr.DisplayUrl != "" {
+			if strings.Index(sr.DisplayUrl, "http") >= 0 {
+				domain, _ = urlhandler.GetDomain(sr.DisplayUrl)
+			} else {
+				domain, _ = urlhandler.GetDomain("http://" + sr.DisplayUrl)
+			}
+		} else {
+			_ = sr.GetPCRealUrl()
+			if sr.RealUrl != "" {
+				domain, _ = urlhandler.GetDomain(sr.RealUrl)
+			}
+		}
+		if sr.RealUrl != "" {
+			return strings.HasSuffix(strings.Replace(sr.RealUrl, "/", "", -1), domain)
+		} else if sr.DisplayUrl != "" {
+			return strings.HasSuffix(strings.Replace(sr.DisplayUrl, "/", "", -1), domain)
+		}
+	}
+	return false
+
 }
 
 const PcPort = "PC"
