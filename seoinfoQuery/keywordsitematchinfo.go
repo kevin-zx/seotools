@@ -33,7 +33,7 @@ func KeywordSiteMatchInfoQuery(keyword string, domain string, port DevicePort) (
 	ksi.KeywordRecordHomePageIndex = kri.HomePageRank
 
 	// 获取本站匹配信息
-	if len(*kri.SearchResults) > 0 {
+	if (kri.SearchResults) != nil && len(*kri.SearchResults) > 0 {
 		// 首条
 		ksi.FirstPageMatchInfo, err = CalculateMatchInfo(keyword, &(*kri.SearchResults)[0], true)
 		if err != nil {
