@@ -61,3 +61,48 @@ func ParseWebSeoFromUrl(webUrl string) (*WebPageSeoInfo, error) {
 	webInf.RealUrl, err = url.Parse(res.Request.URL.String())
 	return webInf, err
 }
+
+func (wpsi *WebPageSeoInfo) SpiltKeywordsStr2Arr() (keywords []string) {
+	// 处理keywordStr 到arr
+	keywordsStr := wpsi.Keywords
+	//替换统一的分隔符
+	keywordsStr = strings.Replace(keywordsStr, ",", "|", -1)
+	keywordsStr = strings.Replace(keywordsStr, "-", "|", -1)
+	keywordsStr = strings.Replace(keywordsStr, "，", "|", -1)
+	keywordsStr = strings.Replace(keywordsStr, "、", "|", -1)
+	keywordsStr = strings.Replace(keywordsStr, "_", "|", -1)
+	keywordsStr = strings.Replace(keywordsStr, " ", "|", -1)
+	keywordsStr = strings.Replace(keywordsStr, "\t", "|", -1)
+	keywordsStr = strings.Replace(keywordsStr, ";", "|", -1)
+	keywordsStr = strings.Replace(keywordsStr, "；", "|", -1)
+
+	keywordsStr = strings.Replace(keywordsStr, "\n", "", -1)
+	keywordsStr = strings.Replace(keywordsStr, "“", "", -1)
+	keywordsStr = strings.Replace(keywordsStr, "”", "", -1)
+	return RemoveDuplicatesAndEmpty(strings.Split(keywordsStr, "|"))
+}
+
+func RemoveDuplicatesAndEmpty(a []string) (ret []string) {
+	var keywordCount = make(map[string]int)
+	a_len := len(a)
+	for i := 0; i < a_len; i++ {
+		duFlag := false
+		for _, re := range ret {
+			if len(a[i]) == 0 {
+				duFlag = true
+				break
+			}
+			if re == a[i] {
+				if _, ok := keywordCount[re]; !ok {
+					keywordCount[re] = 1
+				}
+				duFlag = true
+				break
+			}
+		}
+		if !duFlag {
+			ret = append(ret, a[i])
+		}
+	}
+	return
+}
