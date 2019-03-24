@@ -145,8 +145,7 @@ func GetPCRecordInfo(domain string) (rci *RecordInfo, err error) {
 	// 百度正常显示收录的方式
 	recordContainer := doc.Find("div.op_site_domain.c-row div span b")
 	if recordContainer != nil && recordContainer.Size() > 0 {
-		recordStr := strings.Replace(recordContainer.Text(), ",", "", -1)
-		rci.Record, err = strconv.Atoi(recordStr)
+		rci.Record = recordStr2Record(recordContainer.Text())
 		if rci.HomePageRank > 0 {
 			rci.HomePageRank--
 		}
