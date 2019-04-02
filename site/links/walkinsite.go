@@ -46,9 +46,7 @@ func WalkInSite(protocol string, domain string, initPath string, port int, handl
 		RandomDelay: 5 * time.Second,
 	})
 	fileReg := regexp.MustCompile(fileRegString)
-	//c.OnScraped(func(response *colly.Response) {
-	//
-	//})
+
 	c.OnHTML("html", func(e *colly.HTMLElement) {
 		if handler != nil {
 			handler(e)
@@ -56,7 +54,7 @@ func WalkInSite(protocol string, domain string, initPath string, port int, handl
 		if len(links) > 30000 {
 			return
 		}
-		selection := e.DOM.Find("titleExtract")
+		selection := e.DOM.Find("title")
 		if selection != nil {
 			title := selection.Text()
 			link, ok := links[e.Request.URL.String()]
@@ -64,12 +62,10 @@ func WalkInSite(protocol string, domain string, initPath string, port int, handl
 				link.Title = title
 			}
 		}
+
 		e.DOM.Find("a[href]").Each(func(i int, a *goquery.Selection) {
 
 			if href, ok := a.Attr("href"); ok && href != "" {
-				//if strings.Contains(href,"12200"){
-				//	println(href)
-				//}
 				if strings.Contains(href, "http") && strings.Contains(href, "://") && !strings.Contains(href, domain) {
 					return
 				}
@@ -80,14 +76,14 @@ func WalkInSite(protocol string, domain string, initPath string, port int, handl
 					abUrl = getAbUrl(e.Request.URL, href)
 				}
 				abURLOb, err := url.Parse(abUrl)
-				isDoman := false
+				isDomain := false
 				if err != nil {
-					isDoman = strings.Contains(abUrl, domain)
+					isDomain = strings.Contains(abUrl, domain)
 				} else {
-					isDoman = abURLOb.Host == domain
+					isDomain = abURLOb.Host == domain
 				}
 
-				if links[abUrl] != nil || fileReg.MatchString(abUrl) || abUrl == "" || strings.Contains(abUrl, "javascript") || !isDoman {
+				if links[abUrl] != nil || fileReg.MatchString(abUrl) || abUrl == "" || strings.Contains(abUrl, "javascript") || !isDomain {
 				} else {
 
 					link := Link{}
