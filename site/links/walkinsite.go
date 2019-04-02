@@ -56,7 +56,7 @@ func WalkInSite(protocol string, domain string, initPath string, port int, handl
 		if len(links) > 30000 {
 			return
 		}
-		selection := e.DOM.Find("title")
+		selection := e.DOM.Find("titleExtract")
 		if selection != nil {
 			title := selection.Text()
 			link, ok := links[e.Request.URL.String()]

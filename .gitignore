@@ -16,6 +16,7 @@
 temp/
 data/
 test/
-lancher/
+#lancher/
 
 *.sum
+*.csv

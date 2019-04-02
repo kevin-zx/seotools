@@ -25,7 +25,7 @@ func ParseWebSeoFromHtml(html string) (*WebPageSeoInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-	title := doc.Find("title").Text()
+	title := doc.Find("titleExtract").Text()
 	description, _ := doc.Find("meta[name=description]").Attr("content")
 	keywords, _ := doc.Find("meta[name=keywords]").Attr("content")
 	site := WebPageSeoInfo{Title: title, Description: description, Keywords: keywords}
