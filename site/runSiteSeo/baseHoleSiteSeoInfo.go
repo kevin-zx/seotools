@@ -16,6 +16,7 @@ type SiteLinkInfo struct {
 	WebPageSeoInfo *site_base.WebPageSeoInfo
 	H1             string
 	IsCrawler      bool
+	InnerText      string
 }
 
 var mu sync.Mutex
@@ -30,10 +31,12 @@ func Run(siteUrlRaw string) (linkMap map[string]*SiteLinkInfo, err error) {
 		}
 		currentUrl := html.Request.URL.String()
 		h1 := html.DOM.Find("h1")
+
 		mu.Lock()
 		if _, ok := linkMap[currentUrl]; !ok {
 			linkMap[currentUrl] = &SiteLinkInfo{}
 		}
+		linkMap[currentUrl].InnerText = html.Text
 		linkMap[currentUrl].IsCrawler = true
 		linkMap[currentUrl].H1 = h1.Text()
 		linkMap[currentUrl].WebPageSeoInfo = wi
