@@ -42,15 +42,16 @@ func main() {
 	}
 	sort.Strings(urlArray)
 	for _, pageUrl := range urlArray {
+
 		title := ""
 		if lm[pageUrl].WebPageSeoInfo != nil {
 			title = lm[pageUrl].WebPageSeoInfo.Title
 			if strings.HasPrefix(title, "=") {
-				title = "'" + title
+				title = "'" + strings.Replace(title, "\n", "", -1)
 			}
 		}
 		if strings.HasPrefix(lm[pageUrl].H1, "=") {
-			lm[pageUrl].H1 = "'" + lm[pageUrl].H1
+			lm[pageUrl].H1 = "'" + strings.Replace(lm[pageUrl].H1, "\n", "", -1)
 		}
 		err := csvWriter.Write([]string{pageUrl, lm[pageUrl].ParentURL, strconv.Itoa(lm[pageUrl].Depth), strconv.Itoa(lm[pageUrl].StatusCode), title, lm[pageUrl].H1, "", "", "", ""})
 		if err != nil {
