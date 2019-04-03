@@ -3,9 +3,9 @@ package links
 
 import (
 	"fmt"
-	"github.com/gocolly/colly"
-
 	"github.com/PuerkitoBio/goquery"
+	"github.com/gocolly/colly"
+	"github.com/kevin-zx/seotools/comm/site_base"
 
 	"regexp"
 	"strings"
@@ -18,10 +18,10 @@ type Link struct {
 	AbsURL string
 	// 请求这个链接花的时间
 	//CostSec   int
-	StatusCode int
-	ParentURL  string
-	Depth      int
-	Title      string
+	StatusCode     int
+	ParentURL      string
+	Depth          int
+	WebPageSeoInfo *site_base.WebPageSeoInfo
 }
 
 const fileRegString = ".+?(\\.jpg|\\.png|\\.gif|\\.GIF|\\.PNG|\\.JPG|\\.pdf|\\.PDF|\\.doc|\\.DOC|\\.csv|\\.CSV|\\.xls|\\.XLS|\\.xlsx|\\.XLSX|\\.mp40|\\.lfu|\\.DNG|\\.ZIP|\\.zip)(\\W+?\\w|$)"
@@ -54,12 +54,16 @@ func WalkInSite(protocol string, domain string, initPath string, port int, handl
 		if len(links) > 30000 {
 			return
 		}
-		selection := e.DOM.Find("title")
-		if selection != nil {
-			title := selection.Text()
+		//selection := e.DOM.Find("title")
+		pageHtml, err := e.DOM.Html()
+		if err != nil {
 			link, ok := links[e.Request.URL.String()]
 			if ok {
-				link.Title = title
+				webPageInfo, err := site_base.ParseWebSeoFromHtml(pageHtml)
+				if err != nil {
+					link.WebPageSeoInfo = webPageInfo
+				}
+				//link.Title = title
 			}
 		}
 

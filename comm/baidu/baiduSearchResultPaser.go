@@ -194,7 +194,7 @@ func MatchRankByReal(srs *[]SearchResult, realUrl string) (rank int) {
 
 // 匹配排名 根据多重条件
 // domain  displayUrl siteName 属于非强制型匹配， 即匹配不上还会进行其它项匹配
-// titleExtract 属于强制型匹配 匹配不上则 直接判定匹配不上
+// title 属于强制型匹配 匹配不上则 直接判定匹配不上
 func MatchRank(srs *[]SearchResult, domain string, displayUrl string, siteName string, title string) (rank int) {
 	for _, sr := range *srs {
 		matchFlag := false
@@ -220,7 +220,7 @@ func MatchRank(srs *[]SearchResult, domain string, displayUrl string, siteName s
 			}
 		}
 
-		// titleExtract 算是强制匹配了，如果没匹配上则跳过
+		// title 算是强制匹配了，如果没匹配上则跳过
 		if title != "" && sr.Title != "" {
 			// 如果title 是组合匹配中的一项 则需要 其它组合匹配项能狗匹配
 			if displayUrl != "" || domain != "" || siteName != "" && matchFlag == false {
@@ -286,8 +286,8 @@ func ParseBaiduMobileSearchResultHtml(html string, page int) (*[]SearchResult, e
 			fmt.Printf("data_log json 化出错，data_log: %s, errinfo:%s\n", data_log, err.Error())
 			return
 		}
-		//titleExtract 处理
-		titleEle := resultEle.Find("h3.c-titleExtract")
+		//title 处理
+		titleEle := resultEle.Find("h3.c-title")
 		if titleEle != nil {
 			result.Title = titleEle.Text()
 			result.TitleMatchWords = getRedWords(titleEle)

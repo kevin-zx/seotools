@@ -25,9 +25,17 @@ func ParseWebSeoFromHtml(html string) (*WebPageSeoInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-	title := doc.Find("titleExtract").Text()
+	title := doc.Find("title").Text()
 	description, _ := doc.Find("meta[name=description]").Attr("content")
 	keywords, _ := doc.Find("meta[name=keywords]").Attr("content")
+	site := WebPageSeoInfo{Title: title, Description: description, Keywords: keywords}
+	return &site, nil
+}
+func ParseWebSeoElement(html *goquery.Selection) (*WebPageSeoInfo, error) {
+
+	title := html.Find("title").Text()
+	description, _ := html.Find("meta[name=description]").Attr("content")
+	keywords, _ := html.Find("meta[name=keywords]").Attr("content")
 	site := WebPageSeoInfo{Title: title, Description: description, Keywords: keywords}
 	return &site, nil
 }

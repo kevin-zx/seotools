@@ -69,3 +69,7 @@ func CalculateFullMatchCount(keyword string, words *[]string) (count int) {
 	}
 	return
 }
+
+func CalculateSearchEngineMatch(title string, keyword string, baiduKeywords []string) {
+
+}
