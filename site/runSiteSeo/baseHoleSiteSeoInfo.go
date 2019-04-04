@@ -48,10 +48,7 @@ func Run(siteUrlRaw string) (linkMap map[string]*SiteLinkInfo, err error) {
 		mu.Unlock()
 	}, func(response *colly.Response, e error) {
 		mu.Lock()
-		errUrl := response.Request.URL.String()
 
-		fmt.Println(errUrl)
-		fmt.Println(e.Error())
 		currentUrl := response.Request.URL.String()
 		if _, ok := linkMap[currentUrl]; !ok {
 			linkMap[currentUrl] = &SiteLinkInfo{AbsURL: currentUrl}

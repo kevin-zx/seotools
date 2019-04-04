@@ -1,7 +1,6 @@
 package site_page_colly
 
 import (
-	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly"
 	"net/url"
@@ -39,7 +38,7 @@ func BaseWalkInSite(siteUrlStr string, port int, limitCount int, handler func(ht
 	c.SetRequestTimeout(100 * time.Second)
 	c.OnHTML("html", func(e *colly.HTMLElement) {
 
-		fmt.Println(e.Request.ID)
+		//fmt.Println(e.Request.ID)
 		if handler != nil {
 			handler(e)
 		}
