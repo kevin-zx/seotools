@@ -34,7 +34,7 @@ func Run(siteUrlRaw string) (linkMap map[string]*SiteLinkInfo, err error) {
 
 		mu.Lock()
 		if _, ok := linkMap[currentUrl]; !ok {
-			linkMap[currentUrl] = &SiteLinkInfo{}
+			linkMap[currentUrl] = &SiteLinkInfo{AbsURL: currentUrl}
 		}
 		linkMap[currentUrl].InnerText = html.Text
 		linkMap[currentUrl].IsCrawler = true
@@ -52,23 +52,23 @@ func Run(siteUrlRaw string) (linkMap map[string]*SiteLinkInfo, err error) {
 
 		fmt.Println(errUrl)
 		fmt.Println(e.Error())
-
-		if _, ok := linkMap[response.Request.URL.String()]; !ok {
-			linkMap[response.Request.URL.String()] = &SiteLinkInfo{}
+		currentUrl := response.Request.URL.String()
+		if _, ok := linkMap[currentUrl]; !ok {
+			linkMap[currentUrl] = &SiteLinkInfo{AbsURL: currentUrl}
 		}
-		existLink := linkMap[response.Request.URL.String()]
+		existLink := linkMap[currentUrl]
 		fmt.Println(existLink.StatusCode)
-		if !linkMap[response.Request.URL.String()].IsCrawler {
-			linkMap[response.Request.URL.String()].IsCrawler = true
-			linkMap[response.Request.URL.String()].Depth = response.Request.Depth
-			linkMap[response.Request.URL.String()].StatusCode = response.StatusCode
+		if !linkMap[currentUrl].IsCrawler {
+			linkMap[currentUrl].IsCrawler = true
+			linkMap[currentUrl].Depth = response.Request.Depth
+			linkMap[currentUrl].StatusCode = response.StatusCode
 		}
 
 		mu.Unlock()
 	}, func(currentUrl string, parentUrl string) {
 		mu.Lock()
 		if _, ok := linkMap[currentUrl]; !ok {
-			linkMap[currentUrl] = &SiteLinkInfo{}
+			linkMap[currentUrl] = &SiteLinkInfo{AbsURL: currentUrl}
 		}
 		linkMap[currentUrl].ParentURL = parentUrl
 		mu.Unlock()
