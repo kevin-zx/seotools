@@ -74,6 +74,10 @@ func Run(siteUrlRaw string) (linkMap map[string]*SiteLinkInfo, err error) {
 		mu.Unlock()
 	})
 	for k, v := range linkMap {
+		// todo:会有absUrl为空的情况，暂时搞不懂为什么。先暴力修复
+		if v.AbsURL == "" {
+			linkMap[k].AbsURL = k
+		}
 		if !v.IsCrawler {
 			delete(linkMap, k)
 		}
