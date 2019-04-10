@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/kevin-zx/go-util/wd_crawler"
-	"log"
+	"github.com/kevin-zx/seotools/comm/baidu"
 	"net/url"
 	"strings"
 	"sync"
@@ -30,9 +30,9 @@ func IsRecord(link string) (bool, error) {
 		queryStr = link
 	}
 	queryStr = url.QueryEscape(queryStr)
-	log.Println(link + "开始")
-	log.Println(queryStr)
-	res, err := crawlerRecord(queryStr)
+	//log.Println(link + "开始")
+	//log.Println(queryStr)
+	res, err := crawlerRecord2(queryStr)
 	if strings.Contains(res, "没有找到该URL。您可以直接访问") || strings.Contains(res, "很抱歉，没有找到与") {
 		return false, nil
 	} else {
@@ -54,6 +54,10 @@ func crawlerRecord(query string) (string, error) {
 		return "", errors.New("抓取错误")
 	}
 	return wdr.Result, nil
+}
+
+func crawlerRecord2(query string) (string, error) {
+	return baidu.GetBaiduPCSearchHtml(query, 1)
 }
 
 const siteTemplate = "site:%s inurl:%s"
