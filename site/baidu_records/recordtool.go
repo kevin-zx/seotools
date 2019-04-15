@@ -29,7 +29,7 @@ func IsRecord(link string) (bool, error) {
 	} else {
 		queryStr = link
 	}
-	queryStr = url.QueryEscape(queryStr)
+	//queryStr = url.QueryEscape(queryStr)
 	//log.Println(link + "开始")
 	//log.Println(queryStr)
 	res, err := crawlerRecord2(queryStr)
