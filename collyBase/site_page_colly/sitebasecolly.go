@@ -70,8 +70,13 @@ func BaseWalkInSite(siteUrlStr string, port int, limitCount int, handler func(ht
 			request.Abort()
 		}
 	})
+	c.OnResponse(func(response *colly.Response) {
+		if !strings.Contains(strings.ToLower(response.Headers.Get("Content-Type")), "html") {
+			response.Headers.Set("Content-Type", "text/html;")
+		}
+	})
 	c.OnError(onErr)
-	_ = c.Visit(siteUrl.String())
+	err = c.Visit(siteUrl.String())
 	c.Wait()
 	return err
 }

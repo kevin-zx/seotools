@@ -6,7 +6,7 @@ import (
 )
 
 func TestRun(t *testing.T) {
-	lm, err := Run("http://www.sh-hting.com/")
+	lm, err := Run("http://www.cqlusi.com/")
 	if err != nil {
 		panic(err)
 	}
