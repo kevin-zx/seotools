@@ -33,10 +33,10 @@ func BaseWalkInSite(siteUrlStr string, port int, limitCount int, handler func(ht
 	c.Limit(&colly.LimitRule{
 		DomainGlob:  "*" + siteUrl.Host + "*",
 		Parallelism: 2,
-		RandomDelay: 1 * time.Second,
-		Delay:       1 * time.Second,
+		RandomDelay: 500 * time.Millisecond,
+		Delay:       200 * time.Millisecond,
 	})
-	c.SetRequestTimeout(100 * time.Second)
+	c.SetRequestTimeout(20 * time.Second)
 	c.OnHTML("html", func(e *colly.HTMLElement) {
 
 		//fmt.Println(e.Request.ID)
