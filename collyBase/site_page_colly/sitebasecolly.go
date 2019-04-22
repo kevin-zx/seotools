@@ -26,7 +26,7 @@ func BaseWalkInSite(siteUrlStr string, port int, limitCount int, handler func(ht
 		colly.AllowedDomains(siteUrl.Host),
 		colly.DisallowedURLFilters(regexp.MustCompile(fileRegString)),
 		colly.UserAgent(userAgent),
-		colly.Async(true),
+		//colly.Async(true),
 		colly.MaxDepth(1000),
 	)
 

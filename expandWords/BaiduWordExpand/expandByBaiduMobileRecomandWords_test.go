@@ -6,7 +6,7 @@ import (
 )
 
 func TestExpandBaiduRecommendWords(t *testing.T) {
-	keywords, err := ExpandBaiduRecommendWords("勾花网")
+	keywords, err := ExpandBaiduRecommendWords("相城新楼盘")
 	if err != nil {
 		panic(err)
 	}
