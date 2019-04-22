@@ -24,7 +24,7 @@ var mu sync.Mutex
 func Run(siteUrlRaw string) (linkMap map[string]*SiteLinkInfo, err error) {
 	mu = sync.Mutex{}
 	linkMap = map[string]*SiteLinkInfo{siteUrlRaw: {}}
-	err = site_page_colly.BaseWalkInSite(siteUrlRaw, 1, 2000, func(html *colly.HTMLElement) {
+	err = site_page_colly.BaseWalkInSite(siteUrlRaw, 1, 4000, func(html *colly.HTMLElement) {
 		wi, err := site_base.ParseWebSeoElement(html.DOM)
 		if err != nil {
 			return
