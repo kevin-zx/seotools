@@ -26,15 +26,15 @@ func BaseWalkInSite(siteUrlStr string, port int, limitCount int, handler func(ht
 		colly.AllowedDomains(siteUrl.Host),
 		colly.DisallowedURLFilters(regexp.MustCompile(fileRegString)),
 		colly.UserAgent(userAgent),
-		//colly.Async(true),
+		colly.Async(true),
 		colly.MaxDepth(1000),
 	)
 
 	c.Limit(&colly.LimitRule{
 		DomainGlob:  "*" + siteUrl.Host + "*",
-		Parallelism: 2,
-		RandomDelay: 500 * time.Millisecond,
-		Delay:       200 * time.Millisecond,
+		Parallelism: 5,
+		RandomDelay: 100 * time.Millisecond,
+		Delay:       100 * time.Millisecond,
 	})
 	c.SetRequestTimeout(20 * time.Second)
 	c.OnHTML("html", func(e *colly.HTMLElement) {
@@ -55,7 +55,10 @@ func BaseWalkInSite(siteUrlStr string, port int, limitCount int, handler func(ht
 			link := clearUrl(href)
 
 			testUrl, _ := e.Request.URL.Parse(link)
-			testUrlStr := testUrl.String()
+			testUrlStr := ""
+			if testUrl != nil {
+				testUrlStr = testUrl.String()
+			}
 
 			if testUrlStr != "" {
 				erri := e.Request.Visit(testUrlStr)
