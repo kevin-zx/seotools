@@ -5,6 +5,7 @@ import (
 	"github.com/gocolly/colly"
 	"github.com/kevin-zx/seotools/collyBase/site_page_colly"
 	"github.com/kevin-zx/seotools/comm/site_base"
+	"strings"
 	"sync"
 )
 
@@ -40,7 +41,13 @@ func RunWithParams(siteUrlRaw string, limitCount int) (linkMap map[string]*SiteL
 		if _, ok := linkMap[currentUrl]; !ok {
 			linkMap[currentUrl] = &SiteLinkInfo{AbsURL: currentUrl}
 		}
+
 		linkMap[currentUrl].InnerText = html.Text
+		TextLen := len(strings.Split(linkMap[currentUrl].InnerText, ""))
+		if TextLen > 8000 {
+			TextLen = 8000
+		}
+		linkMap[currentUrl].InnerText = strings.Join(strings.Split(linkMap[currentUrl].InnerText, "")[0:TextLen], "")
 		linkMap[currentUrl].IsCrawler = true
 		linkMap[currentUrl].H1 = h1.Text()
 		linkMap[currentUrl].WebPageSeoInfo = wi
