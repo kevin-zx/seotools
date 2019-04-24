@@ -96,7 +96,9 @@ func ParseBaiduPCSearchResultHtml(html string) (*[]SearchResult, error) {
 			titleElement := searchResultElement.Find("h3.t>a")
 			resItem.Title = titleElement.Text()
 			titleElement.Find("em").Each(func(_ int, redElement *goquery.Selection) {
-				resItem.TitleMatchWords = append(resItem.TitleMatchWords, redElement.Text())
+				if redElement.Text() != "..." {
+					resItem.TitleMatchWords = append(resItem.TitleMatchWords, redElement.Text())
+				}
 			})
 			resItem.BaiduURL = baiduUrl
 		}
@@ -106,7 +108,9 @@ func ParseBaiduPCSearchResultHtml(html string) (*[]SearchResult, error) {
 		if abstractElement != nil {
 			resItem.BaiduDescription = abstractElement.Text()
 			abstractElement.Find("em").Each(func(_ int, redElement *goquery.Selection) {
-				resItem.BaiduDescriptionMatchWords = append(resItem.BaiduDescriptionMatchWords, redElement.Text())
+				if redElement.Text() != "..." {
+					resItem.BaiduDescriptionMatchWords = append(resItem.BaiduDescriptionMatchWords, redElement.Text())
+				}
 			})
 		}
 
@@ -326,7 +330,9 @@ func ParseBaiduMobileSearchResultHtml(html string, page int) (*[]SearchResult, e
 func getRedWords(element *goquery.Selection) (words []string) {
 	words = []string{}
 	element.Find("em").Each(func(_ int, redElement *goquery.Selection) {
-		words = append(words, redElement.Text())
+		if redElement.Text() != "..." {
+			words = append(words, redElement.Text())
+		}
 	})
 	return
 }
