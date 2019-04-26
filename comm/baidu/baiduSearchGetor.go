@@ -4,6 +4,7 @@ package baidu
 import (
 	"fmt"
 	"github.com/kevin-zx/go-util/httpUtil"
+	"github.com/kevin-zx/go-util/wd_crawler"
 	"net/url"
 	"strings"
 )
@@ -20,6 +21,13 @@ func GetBaiduPCSearchHtmlWithRN(keyword string, page int, rn int) (string, error
 		return "", err
 	}
 	return webCon, nil
+}
+
+func GetBaiduPCSearchHtmlWithRNWithWdRequest(keyword string, page int, rn int, wd *wd_crawler.WdRequest) string {
+	sUrl := combinePcSearchUrl(keyword, rn, page)
+	response := wd.SyncGetWithHeader(sUrl, map[string]string{"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36"}, 10)
+
+	return response.Result
 }
 
 const PCSearchUrlBase = "https://www.baidu.com/s?wd=%s&rn=%d&pn=%d"
@@ -44,6 +52,19 @@ func GetBaiduMobileSearchHtml(keyword string, page int) (string, error) {
 		return "", err
 	}
 	return webCon, nil
+}
+
+// 百度移动端
+func GetBaiduMobileSearchHtmlWithWdRequest(keyword string, page int, wd *wd_crawler.WdRequest) string {
+	sUrl := combineMobileUrl(keyword, page)
+	//.GetWebConFromUrlWithHeader()
+	webResponse := wd.SyncGetWithHeader(sUrl, map[string]string{"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1"}, 10)
+	//webResponse, err := httpUtil.GetWebResponseFromUrlWithHeader()
+	//if err != nil {
+	//	return "", err
+	//}
+
+	return webResponse.Result
 }
 
 const mobileSearchUrlBase = "https://www.baidu.com/from=844b/s?pn=%d&word=%s&ms=1"
@@ -75,6 +96,22 @@ func GetBaiduMobileResultsByKeyword(keyword string, page int) (baiduResults *[]S
 	if err != nil {
 		return
 	}
+	baiduResults, err = ParseBaiduMobileSearchResultHtml(webCon, page)
+	return
+}
+
+func GetBaiduPcResultsByKeywordWithWdRequest(keyword string, page int, rn int, wd *wd_crawler.WdRequest) (baiduResults *[]SearchResult, err error) {
+	webCon := GetBaiduPCSearchHtmlWithRNWithWdRequest(keyword, page, rn, wd)
+
+	baiduResults, err = ParseBaiduPCSearchResultHtml(webCon)
+	return
+}
+
+func GetBaiduMobileResultsByKeywordithWdRequest(keyword string, page int, wd *wd_crawler.WdRequest) (baiduResults *[]SearchResult, err error) {
+	webCon := GetBaiduMobileSearchHtmlWithWdRequest(keyword, page, wd)
+	//if err != nil {
+	//	return
+	//}
 	baiduResults, err = ParseBaiduMobileSearchResultHtml(webCon, page)
 	return
 }
