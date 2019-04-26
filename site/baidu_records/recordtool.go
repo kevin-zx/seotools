@@ -39,17 +39,39 @@ func IsRecord(link string) (bool, error) {
 		return true, nil
 	}
 }
+func IsRecordWithWdRequest(link string, wd *wd_crawler.WdRequest) (bool, error) {
+
+	queryStr := ""
+	var err error
+	if len(link) > baiduSearchAvailableLen {
+		queryStr, err = HandlerTooLongURL(link)
+		if err != nil {
+			return false, err
+		}
+	} else {
+		queryStr = link
+	}
+	//queryStr = url.QueryEscape(queryStr)
+	//log.Println(link + "开始")
+	//log.Println(queryStr)
+	res, err := crawlerRecord(queryStr, wd)
+	if strings.Contains(res, "没有找到该URL。您可以直接访问") || strings.Contains(res, "很抱歉，没有找到与") {
+		return false, nil
+	} else {
+		return true, nil
+	}
+}
 
 // 抓取百度内容
 var baiduSearchFmt = "https://www.baidu.com/s?wd=%s"
 
-func crawlerRecord(query string) (string, error) {
-	lock.Lock()
-	if wdRequest == nil {
-		wdRequest = wd_crawler.NewWdRequest(1)
-	}
-	lock.Unlock()
-	wdr := wdRequest.SyncGet(fmt.Sprintf(baiduSearchFmt, query), 10)
+func crawlerRecord(query string, wd *wd_crawler.WdRequest) (string, error) {
+	//lock.Lock()
+	//if wdRequest == nil {
+	//	wdRequest = wd_crawler.NewWdRequest(1)
+	//}
+	//lock.Unlock()
+	wdr := wd.SyncGet(fmt.Sprintf(baiduSearchFmt, query), 10)
 	if wdr == nil || wdr.Code > 200 {
 		return "", errors.New("抓取错误")
 	}

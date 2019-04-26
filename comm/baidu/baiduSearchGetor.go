@@ -26,7 +26,9 @@ func GetBaiduPCSearchHtmlWithRN(keyword string, page int, rn int) (string, error
 func GetBaiduPCSearchHtmlWithRNWithWdRequest(keyword string, page int, rn int, wd *wd_crawler.WdRequest) string {
 	sUrl := combinePcSearchUrl(keyword, rn, page)
 	response := wd.SyncGetWithHeader(sUrl, map[string]string{"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36"}, 10)
-
+	if response == nil {
+		return ""
+	}
 	return response.Result
 }
 
@@ -63,7 +65,9 @@ func GetBaiduMobileSearchHtmlWithWdRequest(keyword string, page int, wd *wd_craw
 	//if err != nil {
 	//	return "", err
 	//}
-
+	if webResponse == nil {
+		return ""
+	}
 	return webResponse.Result
 }
 
