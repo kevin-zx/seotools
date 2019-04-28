@@ -25,8 +25,9 @@ func ParseWebSeoFromHtml(html string) (*WebPageSeoInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-	title := doc.Find("title").Text()
+	title := clear(doc.Find("title").Text())
 	description, _ := doc.Find("meta[name=description]").Attr("content")
+	description = clear(description)
 	keywords, _ := doc.Find("meta[name=keywords]").Attr("content")
 	site := WebPageSeoInfo{Title: title, Description: description, Keywords: keywords}
 	return &site, nil
@@ -118,4 +119,17 @@ func RemoveDuplicatesAndEmpty(a []string) (ret []string) {
 		}
 	}
 	return
+}
+
+func clear(title string) string {
+	title = strings.Replace(title, "\t", "", -1)
+	title = strings.Replace(title, "\n", "", -1)
+	title = strings.Replace(title, "\r", "", -1)
+	title = strings.Replace(title, "\r", "", -1)
+	title = strings.Replace(title, " ", "", -1)
+	title = strings.Replace(title, "\"", "", -1)
+	//title = strings.Replace(title,"'","",-1)
+	//title = strings.Replace(title,",","",-1)
+	//title = strings.Replace(title,"，","",-1)
+	return title
 }

@@ -36,7 +36,6 @@ func RunWithParams(siteUrlRaw string, limitCount int) (linkMap map[string]*SiteL
 		}
 		currentUrl := html.Request.URL.String()
 		h1 := html.DOM.Find("h1")
-
 		mu.Lock()
 		if _, ok := linkMap[currentUrl]; !ok {
 			linkMap[currentUrl] = &SiteLinkInfo{AbsURL: currentUrl}
@@ -49,7 +48,7 @@ func RunWithParams(siteUrlRaw string, limitCount int) (linkMap map[string]*SiteL
 		}
 		linkMap[currentUrl].InnerText = strings.Join(strings.Split(linkMap[currentUrl].InnerText, "")[0:TextLen], "")
 		linkMap[currentUrl].IsCrawler = true
-		linkMap[currentUrl].H1 = h1.Text()
+		linkMap[currentUrl].H1 = clear(h1.Text())
 		linkMap[currentUrl].WebPageSeoInfo = wi
 		linkMap[currentUrl].Depth = html.Request.Depth
 		if html.Response.StatusCode != 200 {
@@ -91,4 +90,17 @@ func RunWithParams(siteUrlRaw string, limitCount int) (linkMap map[string]*SiteL
 		}
 	}
 	return
+}
+
+func clear(title string) string {
+	title = strings.Replace(title, "\t", "", -1)
+	title = strings.Replace(title, "\n", "", -1)
+	title = strings.Replace(title, "\r", "", -1)
+	title = strings.Replace(title, "\r", "", -1)
+	title = strings.Replace(title, " ", "", -1)
+	title = strings.Replace(title, "\"", "", -1)
+	//title = strings.Replace(title,"'","",-1)
+	//title = strings.Replace(title,",","",-1)
+	//title = strings.Replace(title,"，","",-1)
+	return title
 }
