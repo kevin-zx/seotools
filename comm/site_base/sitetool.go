@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/kevin-zx/go-util/httpUtil"
+	"github.com/kevin-zx/go-util/stringUtil"
 	"strings"
 
 	"github.com/kevin-zx/seotools/comm/baidu"
@@ -25,9 +26,9 @@ func ParseWebSeoFromHtml(html string) (*WebPageSeoInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-	title := clear(doc.Find("title").Text())
+	title := stringUtil.Clear(doc.Find("title").Text())
 	description, _ := doc.Find("meta[name=description]").Attr("content")
-	description = clear(description)
+	description = stringUtil.Clear(description)
 	keywords, _ := doc.Find("meta[name=keywords]").Attr("content")
 	site := WebPageSeoInfo{Title: title, Description: description, Keywords: keywords}
 	return &site, nil
@@ -121,15 +122,15 @@ func RemoveDuplicatesAndEmpty(a []string) (ret []string) {
 	return
 }
 
-func clear(title string) string {
-	title = strings.Replace(title, "\t", "", -1)
-	title = strings.Replace(title, "\n", "", -1)
-	title = strings.Replace(title, "\r", "", -1)
-	title = strings.Replace(title, "\r", "", -1)
-	title = strings.Replace(title, " ", "", -1)
-	title = strings.Replace(title, "\"", "", -1)
-	//title = strings.Replace(title,"'","",-1)
-	//title = strings.Replace(title,",","",-1)
-	//title = strings.Replace(title,"，","",-1)
-	return title
-}
+//func clear(title string) string {
+//	title = strings.Replace(title, "\t", "", -1)
+//	title = strings.Replace(title, "\n", "", -1)
+//	title = strings.Replace(title, "\r", "", -1)
+//	title = strings.Replace(title, "\r", "", -1)
+//	title = strings.Replace(title, " ", "", -1)
+//	title = strings.Replace(title, "\"", "", -1)
+//	//title = strings.Replace(title,"'","",-1)
+//	//title = strings.Replace(title,",","",-1)
+//	//title = strings.Replace(title,"，","",-1)
+//	return title
+//}

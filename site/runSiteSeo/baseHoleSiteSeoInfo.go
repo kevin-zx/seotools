@@ -3,6 +3,7 @@ package runSiteSeo
 import (
 	"fmt"
 	"github.com/gocolly/colly"
+	"github.com/kevin-zx/go-util/stringUtil"
 	"github.com/kevin-zx/seotools/collyBase/site_page_colly"
 	"github.com/kevin-zx/seotools/comm/site_base"
 	"strings"
@@ -48,7 +49,7 @@ func RunWithParams(siteUrlRaw string, limitCount int) (linkMap map[string]*SiteL
 		}
 		linkMap[currentUrl].InnerText = strings.Join(strings.Split(linkMap[currentUrl].InnerText, "")[0:TextLen], "")
 		linkMap[currentUrl].IsCrawler = true
-		linkMap[currentUrl].H1 = clear(h1.Text())
+		linkMap[currentUrl].H1 = stringUtil.Clear(h1.Text())
 		linkMap[currentUrl].WebPageSeoInfo = wi
 		linkMap[currentUrl].Depth = html.Request.Depth
 		if html.Response.StatusCode != 200 {
@@ -92,15 +93,15 @@ func RunWithParams(siteUrlRaw string, limitCount int) (linkMap map[string]*SiteL
 	return
 }
 
-func clear(title string) string {
-	title = strings.Replace(title, "\t", "", -1)
-	title = strings.Replace(title, "\n", "", -1)
-	title = strings.Replace(title, "\r", "", -1)
-	title = strings.Replace(title, "\r", "", -1)
-	title = strings.Replace(title, " ", "", -1)
-	title = strings.Replace(title, "\"", "", -1)
-	//title = strings.Replace(title,"'","",-1)
-	//title = strings.Replace(title,",","",-1)
-	//title = strings.Replace(title,"，","",-1)
-	return title
-}
+//func clear(title string) string {
+//	title = strings.Replace(title, "\t", "", -1)
+//	title = strings.Replace(title, "\n", "", -1)
+//	title = strings.Replace(title, "\r", "", -1)
+//	title = strings.Replace(title, "\r", "", -1)
+//	title = strings.Replace(title, " ", "", -1)
+//	title = strings.Replace(title, "\"", "", -1)
+//	//title = strings.Replace(title,"'","",-1)
+//	//title = strings.Replace(title,",","",-1)
+//	//title = strings.Replace(title,"，","",-1)
+//	return title
+//}
