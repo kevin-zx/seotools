@@ -11,17 +11,17 @@ import (
 )
 
 type SearchResult struct {
-	Port                       string
-	Rank                       int
-	BaiduURL                   string
-	Title                      string
-	RealUrl                    string
-	DisplayUrl                 string
-	SiteName                   string
-	Type                       string //vid_pocket 视频，
-	TitleMatchWords            []string
-	BaiduDescriptionMatchWords []string //百度显示的description的飘红字
-	BaiduDescription           string   // 百度显示的description
+	Port                       string   `json:"port"`
+	Rank                       int      `json:"rank"`
+	BaiduURL                   string   `json:"baidu_url"`
+	Title                      string   `json:"title"`
+	RealUrl                    string   `json:"real_url"`
+	DisplayUrl                 string   `json:"display_url"`
+	SiteName                   string   `json:"site_name"`
+	Type                       string   `json:"type"` //vid_pocket 视频，
+	TitleMatchWords            []string `json:"title_match_words"`
+	BaiduDescriptionMatchWords []string `json:"baidu_description_match_words"` //百度显示的description的飘红字
+	BaiduDescription           string   `json:"baidu_description"`             // 百度显示的description
 }
 
 func (sr *SearchResult) GetPCRealUrl() error {
