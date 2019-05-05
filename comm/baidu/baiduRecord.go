@@ -75,7 +75,7 @@ func GetMobileKeywordSiteRecordInfo(keyword string, domain string) (kri *Keyword
 	kri = &KeywordRecordInfo{Keyword: keyword}
 	rs, err := GetBaiduMobileResultsByKeyword("site:"+strings.Replace(domain, "www.", "", 1)+" "+keyword, 1)
 
-	if len(*rs) == 0 {
+	if rs == nil || len(*rs) == 0 {
 		return
 	}
 	kri.HomePageRank = GetFirstHomePageRank(rs, domain)
