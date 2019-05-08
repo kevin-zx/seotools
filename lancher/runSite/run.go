@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	siteUrl := "http://pazl.pingan.cn/gongsijianjie/index.html"
+	siteUrl := "http://www.shbaoyuan.com"
 	domain, _ := urlhandler.GetDomain(siteUrl)
 	lm, err := runSiteSeo.Run(siteUrl)
 	if err != nil {

@@ -50,13 +50,22 @@ func (sr *SearchResult) IsHomePage() bool {
 		}
 	} else {
 		domain := ""
-		if sr.DisplayUrl != "" {
+		if sr.DisplayUrl != "" && !strings.Contains(sr.DisplayUrl, "...") {
 			if strings.Index(sr.DisplayUrl, "http") >= 0 {
 				domain, _ = urlhandler.GetDomain(sr.DisplayUrl)
 			} else {
 				domain, _ = urlhandler.GetDomain("http://" + sr.DisplayUrl)
 			}
 		} else {
+			if strings.Contains(sr.DisplayUrl, "...") {
+				if strings.Contains(sr.DisplayUrl, "?") {
+					return false
+				}
+				td := strings.Replace(sr.DisplayUrl, "//", "", -1)
+				if strings.Contains(td, "/") {
+					return false
+				}
+			}
 			_ = sr.GetPCRealUrl()
 			if sr.RealUrl != "" {
 				domain, _ = urlhandler.GetDomain(sr.RealUrl)
