@@ -213,7 +213,7 @@ func MatchRank(srs *[]SearchResult, domain string, displayUrl string, siteName s
 		matchFlag := false
 
 		//这里是模糊匹配
-		if domain != "" && displayUrl != "" {
+		if domain != "" && sr.DisplayUrl != "" {
 			if strings.Contains(sr.DisplayUrl, domain) {
 				matchFlag = true
 			}
