@@ -1,11 +1,15 @@
 package runSiteSeo
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/gocolly/colly"
 	"github.com/kevin-zx/go-util/stringUtil"
 	"github.com/kevin-zx/seotools/collyBase/site_page_colly"
 	"github.com/kevin-zx/seotools/comm/site_base"
+	"golang.org/x/text/encoding/simplifiedchinese"
+	"golang.org/x/text/transform"
+	"io/ioutil"
 	"strings"
 	"sync"
 )
@@ -35,22 +39,29 @@ func RunWithParams(siteUrlRaw string, limitCount int) (linkMap map[string]*SiteL
 		if err != nil {
 			return
 		}
+
 		currentUrl := html.Request.URL.String()
+
 		h1 := html.DOM.Find("h1")
 		mu.Lock()
 		if _, ok := linkMap[currentUrl]; !ok {
 			linkMap[currentUrl] = &SiteLinkInfo{AbsURL: currentUrl}
 		}
 
-		linkMap[currentUrl].InnerText = html.Text
+		linkMap[currentUrl].InnerText = html.DOM.Text()
 		TextLen := len(strings.Split(linkMap[currentUrl].InnerText, ""))
 		if TextLen > 8000 {
 			TextLen = 8000
 		}
+
 		linkMap[currentUrl].InnerText = strings.Join(strings.Split(linkMap[currentUrl].InnerText, "")[0:TextLen], "")
 		linkMap[currentUrl].IsCrawler = true
 		linkMap[currentUrl].H1 = stringUtil.Clear(h1.Text())
 		linkMap[currentUrl].WebPageSeoInfo = wi
+		//charset,_ := html.DOM.Find("meta[http-equiv=Content-Type]").Attr("content")
+		//if strings.Contains(strings.ToLower(charset),"gb") {
+		//	convertGBKCharset(linkMap[currentUrl])
+		//}
 		linkMap[currentUrl].Depth = html.Request.Depth
 		if html.Response.StatusCode != 200 {
 			fmt.Println(html.Response.StatusCode)
@@ -91,6 +102,42 @@ func RunWithParams(siteUrlRaw string, limitCount int) (linkMap map[string]*SiteL
 		}
 	}
 	return
+}
+
+func convertGBKCharset(sli *SiteLinkInfo) {
+	h1B, err := GbkToUtf8([]byte(sli.H1))
+	if err == nil {
+		sli.H1 = string(h1B)
+	}
+	innerTextByte, err := GbkToUtf8([]byte(sli.InnerText))
+	if err == nil {
+		fmt.Println(sli.InnerText)
+		sli.InnerText = string(innerTextByte)
+		fmt.Println(sli.InnerText)
+	}
+	descByte, err := GbkToUtf8([]byte(sli.WebPageSeoInfo.Description))
+	if err == nil {
+		sli.WebPageSeoInfo.Description = string(descByte)
+	}
+	keywordsByte, err := GbkToUtf8([]byte(sli.WebPageSeoInfo.Keywords))
+	if err == nil {
+		sli.WebPageSeoInfo.Keywords = string(keywordsByte)
+	}
+
+	TitleByte, err := GbkToUtf8([]byte(sli.WebPageSeoInfo.Title))
+	if err == nil {
+		sli.WebPageSeoInfo.Title = string(TitleByte)
+	}
+
+}
+
+func GbkToUtf8(s []byte) ([]byte, error) {
+	reader := transform.NewReader(bytes.NewReader(s), simplifiedchinese.GBK.NewDecoder())
+	d, e := ioutil.ReadAll(reader)
+	if e != nil {
+		return nil, e
+	}
+	return d, nil
 }
 
 //func clear(title string) string {
