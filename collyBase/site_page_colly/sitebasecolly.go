@@ -54,10 +54,10 @@ func BaseWalkInSite(siteUrlStr string, port int, limitCount int, timeOut time.Du
 			}
 			link := clearUrl(href)
 			resultUrl := parseUrl(e.Request.URL, link)
-			if resultUrl != "" && (strings.HasPrefix(resultUrl, "http:") || strings.HasPrefix(resultUrl, "https:")) && !strings.HasPrefix(link, "./") && !strings.HasPrefix(link, "/") && !strings.HasPrefix(link, "http") {
-				link = "/" + link
-				resultUrl = parseUrl(e.Request.URL, link)
-			}
+			//if resultUrl != "" && (strings.HasPrefix(resultUrl, "http:") || strings.HasPrefix(resultUrl, "https:")) && !strings.HasPrefix(link, "./") && !strings.HasPrefix(link, "/") && !strings.HasPrefix(link, "http") {
+			//	link = "/" + link
+			//	resultUrl = parseUrl(e.Request.URL, link)
+			//}
 			if resultUrl != "" {
 				erri := e.Request.Visit(resultUrl)
 				if erri == nil {
