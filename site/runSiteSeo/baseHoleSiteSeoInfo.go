@@ -49,7 +49,7 @@ func RunWithParams(siteUrlRaw string, limitCount int, timeout time.Duration) (li
 			linkMap[currentUrl] = &SiteLinkInfo{AbsURL: currentUrl}
 		}
 
-		linkMap[currentUrl].InnerText = html.DOM.Text()
+		linkMap[currentUrl].InnerText = html.DOM.Find("body a").Text()
 		TextLen := len(strings.Split(linkMap[currentUrl].InnerText, ""))
 		if TextLen > 8000 {
 			TextLen = 8000
@@ -133,7 +133,7 @@ func convertGBKCharset(sli *SiteLinkInfo) {
 }
 
 func GbkToUtf8(s []byte) ([]byte, error) {
-	reader := transform.NewReader(bytes.NewReader(s), simplifiedchinese.GBK.NewDecoder())
+	reader := transform.NewReader(bytes.NewReader(s), simplifiedchinese.GB18030.NewDecoder())
 	d, e := ioutil.ReadAll(reader)
 	if e != nil {
 		return nil, e

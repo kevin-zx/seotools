@@ -29,7 +29,7 @@ func BaseWalkInSite(siteUrlStr string, port int, limitCount int, timeOut time.Du
 		colly.Async(true),
 		colly.MaxDepth(1000),
 	)
-
+	c.DetectCharset = true
 	c.Limit(&colly.LimitRule{
 		DomainGlob:  "*" + siteUrl.Host + "*",
 		Parallelism: 4,
