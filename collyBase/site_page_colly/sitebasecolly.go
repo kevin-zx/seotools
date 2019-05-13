@@ -53,17 +53,15 @@ func BaseWalkInSite(siteUrlStr string, port int, limitCount int, timeOut time.Du
 				return
 			}
 			link := clearUrl(href)
-
-			testUrl, _ := e.Request.URL.Parse(link)
-			testUrlStr := ""
-			if testUrl != nil {
-				testUrlStr = testUrl.String()
+			resultUrl := parseUrl(e.Request.URL, link)
+			if resultUrl != "" && (strings.HasPrefix(resultUrl, "http:") || strings.HasPrefix(resultUrl, "https:")) && !strings.HasPrefix(link, "./") && !strings.HasPrefix(link, "/") && !strings.HasPrefix(link, "http") {
+				link = "/" + link
+				resultUrl = parseUrl(e.Request.URL, link)
 			}
-
-			if testUrlStr != "" {
-				erri := e.Request.Visit(testUrlStr)
+			if resultUrl != "" {
+				erri := e.Request.Visit(resultUrl)
 				if erri == nil {
-					parentInfo(testUrlStr, e.Request.URL.String())
+					parentInfo(resultUrl, e.Request.URL.String())
 				}
 			}
 		})
@@ -84,6 +82,15 @@ func BaseWalkInSite(siteUrlStr string, port int, limitCount int, timeOut time.Du
 	return err
 }
 
+func parseUrl(curl *url.URL, href string) string {
+	testUrl, _ := curl.Parse(href)
+	testUrlStr := ""
+	if testUrl != nil {
+		testUrlStr = testUrl.String()
+	}
+	return testUrlStr
+}
+
 func clearUrl(webUrl string) string {
 
 	webUrl = handlerDoubleSlant(webUrl)
@@ -97,6 +104,9 @@ func clearUrl(webUrl string) string {
 	//unicode空格
 	webUrl = strings.Replace(webUrl, "&#10;", "", -1)
 	webUrl = strings.Replace(webUrl, "&#9;", "", -1)
+	//if !strings.HasPrefix(webUrl,"./") && !strings.HasPrefix(webUrl,"/") && !strings.HasPrefix(webUrl,"http"){
+	//	webUrl = "/"+webUrl
+	//}
 	return webUrl
 
 }
