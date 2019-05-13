@@ -12,7 +12,7 @@ import (
 
 const fileRegString = ".+?(\\.jpg|\\.png|\\.gif|\\.GIF|\\.PNG|\\.JPG|\\.pdf|\\.PDF|\\.doc|\\.DOC|\\.csv|\\.CSV|\\.xls|\\.XLS|\\.xlsx|\\.XLSX|\\.mp40|\\.lfu|\\.DNG|\\.ZIP|\\.zip)(\\W+?\\w|$)"
 
-func BaseWalkInSite(siteUrlStr string, port int, limitCount int, handler func(html *colly.HTMLElement), onErr func(response *colly.Response, e error), parentInfo func(currentUrl string, parentUrl string)) (err error) {
+func BaseWalkInSite(siteUrlStr string, port int, limitCount int, timeOut time.Duration, handler func(html *colly.HTMLElement), onErr func(response *colly.Response, e error), parentInfo func(currentUrl string, parentUrl string)) (err error) {
 	userAgent := "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
 	if port == 2 {
 		userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1"
@@ -33,8 +33,8 @@ func BaseWalkInSite(siteUrlStr string, port int, limitCount int, handler func(ht
 	c.Limit(&colly.LimitRule{
 		DomainGlob:  "*" + siteUrl.Host + "*",
 		Parallelism: 4,
-		RandomDelay: 400 * time.Millisecond,
-		Delay:       400 * time.Millisecond,
+		RandomDelay: timeOut,
+		Delay:       timeOut,
 	})
 	c.SetRequestTimeout(20 * time.Second)
 	c.OnHTML("html", func(e *colly.HTMLElement) {
