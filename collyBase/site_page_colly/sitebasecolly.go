@@ -14,6 +14,7 @@ const fileRegString = ".+?(\\.jpg|\\.png|\\.gif|\\.GIF|\\.PNG|\\.JPG|\\.pdf|\\.P
 
 func BaseWalkInSite(siteUrlStr string, port int, limitCount int, timeOut time.Duration, handler func(html *colly.HTMLElement), onErr func(response *colly.Response, e error), parentInfo func(currentUrl string, parentUrl string)) (err error) {
 	//userAgent := "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+
 	userAgent := "Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)"
 	if port == 2 {
 		userAgent = "Mozilla/5.0 (Linux;u;Android 4.2.2;zh-cn;) AppleWebKit/534.46 (KHTML,like Gecko) Version/5.1 Mobile Safari/10600.6.3 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html）"
