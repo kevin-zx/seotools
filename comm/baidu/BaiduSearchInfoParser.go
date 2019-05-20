@@ -9,6 +9,7 @@ import (
 type BaiduSearchInfo struct {
 	Port            string
 	BaiduMatchCount int
+	MainPageCount   int
 	SearchResults   *[]SearchResult
 }
 
@@ -31,5 +32,10 @@ func ParseBaiduPcSearchInfoFromHtml(html string) (bsi *BaiduSearchInfo, err erro
 		return
 	}
 	bsi.SearchResults = srs
+	for _, sr := range *bsi.SearchResults {
+		if sr.IsHomePage() {
+			bsi.MainPageCount++
+		}
+	}
 	return
 }
