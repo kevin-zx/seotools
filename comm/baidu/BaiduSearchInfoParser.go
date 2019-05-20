@@ -10,6 +10,8 @@ type BaiduSearchInfo struct {
 	Port            string
 	BaiduMatchCount int
 	MainPageCount   int
+	IsEscape        bool
+	EscapeWord      string
 	SearchResults   *[]SearchResult
 }
 
@@ -26,6 +28,16 @@ func ParseBaiduPcSearchInfoFromHtml(html string) (bsi *BaiduSearchInfo, err erro
 	t = strings.Replace(t, "百度为您找到相关结果约", "", -1)
 	t = strings.Replace(t, "个", "", -1)
 	t = strings.Replace(t, ",", "", -1)
+	seTip := doc.Find("#super_se_tip").Text()
+	if strings.Contains(seTip, "已显示") {
+		doc.Find("#super_se_tip strong").Each(func(_ int, strong *goquery.Selection) {
+			_, ok := strong.Attr("class")
+			if !ok {
+				bsi.IsEscape = true
+				bsi.EscapeWord = strong.Text()
+			}
+		})
+	}
 	bsi.BaiduMatchCount, err = strconv.Atoi(t)
 	srs, err := ParseBaiduPCSearchResultHtml(html)
 	if err != nil {

@@ -6,7 +6,7 @@ import (
 )
 
 func TestParseBaiduPcSearchInfoFromHtml(t *testing.T) {
-	searhHTML, err := GetBaiduPCSearchHtml("1", 1)
+	searhHTML, err := GetBaiduPCSearchHtml("快餐陪送", 1)
 	if err != nil {
 		panic(err)
 	}
