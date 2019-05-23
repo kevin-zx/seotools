@@ -28,6 +28,8 @@ func ParseBaiduPcSearchInfoFromHtml(html string) (bsi *BaiduSearchInfo, err erro
 	t = strings.Replace(t, "百度为您找到相关结果约", "", -1)
 	t = strings.Replace(t, "个", "", -1)
 	t = strings.Replace(t, ",", "", -1)
+	bsi.BaiduMatchCount, err = strconv.Atoi(t)
+
 	seTip := doc.Find("#super_se_tip").Text()
 	if strings.Contains(seTip, "已显示") {
 		doc.Find("#super_se_tip strong").Each(func(_ int, strong *goquery.Selection) {
@@ -38,7 +40,6 @@ func ParseBaiduPcSearchInfoFromHtml(html string) (bsi *BaiduSearchInfo, err erro
 			}
 		})
 	}
-	bsi.BaiduMatchCount, err = strconv.Atoi(t)
 	srs, err := ParseBaiduPCSearchResultHtml(html)
 	if err != nil {
 		return

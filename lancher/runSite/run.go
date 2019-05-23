@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	siteUrl := "http://www.oubeisiman.com/"
+	siteUrl := "http://qm.whmnx.com/"
 	domain, _ := urlhandler.GetDomain(siteUrl)
 	lm, err := runSiteSeo.Run(siteUrl)
 	if err != nil {
