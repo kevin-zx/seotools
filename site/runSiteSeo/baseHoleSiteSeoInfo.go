@@ -29,13 +29,13 @@ type SiteLinkInfo struct {
 var mu sync.Mutex
 
 func Run(siteUrlRaw string) (linkMap map[string]*SiteLinkInfo, err error) {
-	return RunWithParams(siteUrlRaw, 4000, 400*time.Millisecond)
+	return RunWithParams(siteUrlRaw, 4000, 400*time.Millisecond, 1)
 }
 
-func RunWithParams(siteUrlRaw string, limitCount int, timeout time.Duration) (linkMap map[string]*SiteLinkInfo, err error) {
+func RunWithParams(siteUrlRaw string, limitCount int, timeout time.Duration, port int) (linkMap map[string]*SiteLinkInfo, err error) {
 	mu = sync.Mutex{}
 	linkMap = map[string]*SiteLinkInfo{siteUrlRaw: {}}
-	err = site_page_colly.BaseWalkInSite(siteUrlRaw, 1, limitCount, timeout, func(html *colly.HTMLElement) {
+	err = site_page_colly.BaseWalkInSite(siteUrlRaw, port, limitCount, timeout, func(html *colly.HTMLElement) {
 		wi, err := site_base.ParseWebSeoElement(html.DOM)
 		if err != nil {
 			return
