@@ -41,7 +41,7 @@ func BaseWalkInSite(siteUrlStr string, port int, limitCount int, timeOut time.Du
 	c.SetRequestTimeout(20 * time.Second)
 	c.OnHTML("html", func(e *colly.HTMLElement) {
 
-		//fmt.Println(e.Request.ID)
+		fmt.Println(e.Request.ID)
 		if e.Request.ID%50 == 0 {
 			fmt.Printf("爬取了 %d 个\n", e.Request.ID)
 		}

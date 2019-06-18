@@ -5,12 +5,13 @@ import (
 	"flag"
 	"fmt"
 	"github.com/kevin-zx/go-util/fileUtil"
-	"github.com/kevin-zx/seotools/site/links"
+	"github.com/kevin-zx/seotools/site/runSiteSeo"
 	"github.com/kevin-zx/seotools/zhanzhangtool/commitUrl"
 	"net/url"
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 var cUrl = flag.String("u", "", "对应站点的url， 请加上协议（http or https）")
@@ -35,8 +36,8 @@ func main() {
 	domain := siteUrl.Host
 	print(domain)
 	fileName := strings.Replace(domain, ".", "_", -1) + ".csv"
-
-	linkMap, err := links.WalkInSite(protocol, domain, *initPath, *port, nil)
+	linkMap, err := runSiteSeo.RunWithParams(*cUrl+*initPath, 6000, time.Second*10, *port)
+	//linkMap, err := links.WalkInSite(protocol, domain, *initPath, *port, nil)
 	if err != nil {
 		panic(err)
 	}
@@ -55,14 +56,14 @@ func main() {
 	defer f.Close()
 	w := csv.NewWriter(f)
 	w.Write([]string{"链接", "父级链接", "状态码"})
-	for _, link := range *linkMap {
+	for _, link := range linkMap {
 		w.Write([]string{link.AbsURL, link.ParentURL, strconv.Itoa(link.StatusCode)})
 	}
 	w.Flush()
 
 	if *commitToken != "" {
 		var curls []string
-		for _, link := range *linkMap {
+		for _, link := range linkMap {
 			curls = append(curls, link.AbsURL)
 			if len(curls) == 1000 {
 				z, err := commitUrl.Commit(*commitToken, domain, curls)

@@ -9,12 +9,13 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func main() {
-	siteUrl := "http://www.cfenglish.cn/"
+	siteUrl := "http://www.zoboet.com/index.html"
 	domain, _ := urlhandler.GetDomain(siteUrl)
-	lm, err := runSiteSeo.Run(siteUrl)
+	lm, err := runSiteSeo.RunWithParams(siteUrl, 2000, time.Second*10, 2)
 	if err != nil {
 		panic(err)
 	}

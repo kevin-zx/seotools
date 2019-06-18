@@ -6,7 +6,7 @@ import (
 )
 
 func TestIsRecord(t *testing.T) {
-	f, err := IsRecord("https://www.omegawatches.cn/cn/watch-omega-constellation-globemaster-omega-co-axial-master-chronometer-annual-calendar-41-mm-13033412202001/")
+	f, err := IsRecord("")
 	if err != nil {
 		t.Error(err)
 	}
@@ -33,4 +33,13 @@ func TestIsRecord2(t *testing.T) {
 		}
 
 	}
+}
+
+func TestHandlerTooLongURL(t *testing.T) {
+	a, err := HandlerTooLongURL("http://www.cqnfdr.com.cn/p122/news_12282.htmlasdfhjaksdfhaksdfhjkasdfhkjasdfhkajsfheuahjfskjdfhjsnfjeuhu")
+	//a,err := HandlerTooLongURL("http://www.zoboet.com/search.php?key=中国演艺设备行业协会第十分会年会由意大利蒙特宝音响提供扩声系统")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(a)
 }
