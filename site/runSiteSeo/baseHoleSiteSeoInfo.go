@@ -49,7 +49,8 @@ func RunWithParams(siteUrlRaw string, limitCount int, timeout time.Duration, por
 			linkMap[currentUrl] = &SiteLinkInfo{AbsURL: currentUrl}
 		}
 
-		linkMap[currentUrl].InnerText = html.DOM.Find("body a").Text()
+		linkMap[currentUrl].InnerText = html.DOM.Find("body").Text()
+		//fmt.Println(linkMap[currentUrl].InnerText)
 		TextLen := len(strings.Split(linkMap[currentUrl].InnerText, ""))
 		if TextLen > 8000 {
 			TextLen = 8000
