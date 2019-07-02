@@ -57,6 +57,7 @@ func RunWithParams(siteUrlRaw string, limitCount int, timeout time.Duration, por
 		}
 
 		linkMap[currentUrl].InnerText = strings.Join(strings.Split(linkMap[currentUrl].InnerText, "")[0:TextLen], "")
+		//fmt.Println(linkMap[currentUrl].InnerText )
 		linkMap[currentUrl].IsCrawler = true
 		linkMap[currentUrl].H1 = stringUtil.Clear(h1.Text())
 		linkMap[currentUrl].WebPageSeoInfo = wi

@@ -55,9 +55,9 @@ func main() {
 	}
 	defer f.Close()
 	w := csv.NewWriter(f)
-	w.Write([]string{"链接", "父级链接", "状态码"})
+	w.Write([]string{"链接", "父级链接", "状态码", "Title"})
 	for _, link := range linkMap {
-		w.Write([]string{link.AbsURL, link.ParentURL, strconv.Itoa(link.StatusCode)})
+		w.Write([]string{link.AbsURL, link.ParentURL, strconv.Itoa(link.StatusCode), link.WebPageSeoInfo.Title})
 	}
 	w.Flush()
 

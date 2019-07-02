@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/csv"
+	"fmt"
 	"github.com/kevin-zx/go-util/fileUtil"
 	"github.com/kevin-zx/seotools/comm/urlhandler"
 	"github.com/kevin-zx/seotools/site/runSiteSeo"
@@ -13,9 +14,10 @@ import (
 )
 
 func main() {
-	siteUrl := "http://www.zoboet.com/index.html"
+	siteUrl := "http://www.hzshunzhi.com/"
+	//59irv.com
 	domain, _ := urlhandler.GetDomain(siteUrl)
-	lm, err := runSiteSeo.RunWithParams(siteUrl, 2000, time.Second*10, 2)
+	lm, err := runSiteSeo.RunWithParams(siteUrl, 2000, time.Second*10, 1)
 	if err != nil {
 		panic(err)
 	}
@@ -43,7 +45,7 @@ func main() {
 	}
 	sort.Strings(urlArray)
 	for _, pageUrl := range urlArray {
-
+		fmt.Println(lm[pageUrl].InnerText)
 		title := ""
 		if lm[pageUrl].WebPageSeoInfo != nil {
 			title = lm[pageUrl].WebPageSeoInfo.Title

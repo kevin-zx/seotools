@@ -6,7 +6,7 @@ import (
 )
 
 func TestGetLongWordByKeyword(t *testing.T) {
-	lws, tp, err := GetLongWordByKeyword("测试", 1, 10, "5957537FE97E41049F9A9E04B5DBF04C")
+	lws, tp, err := GetLongWordByKeyword("测试", 1, 10, "")
 	if err != nil {
 		panic(err)
 	}
