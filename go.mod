@@ -11,13 +11,14 @@ require (
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/gocolly/colly v1.1.0
 	github.com/kennygrant/sanitize v1.2.4 // indirect
-	github.com/kevin-zx/go-util v0.0.0-20190429022339-812e6afe9ba0
+	github.com/kevin-zx/go-util v0.0.0-20190612053348-03f3caf9bd25
+	github.com/kevin-zx/http-util v0.0.0-20191122081506-be2470291058
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
 	github.com/temoto/robotstxt v0.0.0-20180810133444-97ee4a9ee6ea // indirect
 	github.com/tidwall/gjson v1.1.5
 	github.com/tidwall/match v1.0.1 // indirect
-	golang.org/x/net v0.0.0-20190125091013-d26f9f9a57f3
+	golang.org/x/net v0.0.0-20190628185345-da137c7871d7
 	golang.org/x/sync v0.0.0-20181221193216-37e7f081c4d4 // indirect
 	golang.org/x/text v0.3.0
 )

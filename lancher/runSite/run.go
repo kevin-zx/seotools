@@ -14,10 +14,10 @@ import (
 )
 
 func main() {
-	siteUrl := "http://www.hzshunzhi.com/"
+	siteUrl := "http://www.daqing886.com/"
 	//59irv.com
 	domain, _ := urlhandler.GetDomain(siteUrl)
-	lm, err := runSiteSeo.RunWithParams(siteUrl, 2000, time.Second*10, 1)
+	lm, err := runSiteSeo.RunWithParams(siteUrl, 20000, time.Second*10, 1)
 	if err != nil {
 		panic(err)
 	}
@@ -35,7 +35,7 @@ func main() {
 		}
 	}
 	csvWriter := csv.NewWriter(rfile)
-	err = csvWriter.Write([]string{"当前url", "父级url", "深度", "页面状态码", "标题", "H1", "建议title", "建议keywords", "建议description", "备注"})
+	err = csvWriter.Write([]string{"当前url", "父级url", "深度", "页面状态码", "标题", "H1", "文字长度", "建议title", "建议keywords", "建议description", "备注"})
 	if err != nil {
 		panic(err)
 	}
@@ -56,7 +56,7 @@ func main() {
 		if strings.HasPrefix(lm[pageUrl].H1, "=") {
 			lm[pageUrl].H1 = "'" + strings.Replace(lm[pageUrl].H1, "\n", "", -1)
 		}
-		err := csvWriter.Write([]string{pageUrl, lm[pageUrl].ParentURL, strconv.Itoa(lm[pageUrl].Depth), strconv.Itoa(lm[pageUrl].StatusCode), title, lm[pageUrl].H1, "", "", "", ""})
+		err := csvWriter.Write([]string{pageUrl, lm[pageUrl].ParentURL, strconv.Itoa(lm[pageUrl].Depth), strconv.Itoa(lm[pageUrl].StatusCode), title, lm[pageUrl].H1, strconv.Itoa(len(lm[pageUrl].InnerText)), "", "", "", ""})
 		if err != nil {
 			panic(err)
 		}

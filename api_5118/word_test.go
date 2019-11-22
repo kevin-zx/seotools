@@ -6,10 +6,14 @@ import (
 )
 
 func TestGetLongWordByKeyword(t *testing.T) {
-	lws, tp, err := GetLongWordByKeyword("测试", 1, 10, "")
+	lws, tp, err := GetLongWordByKeyword("垃圾回收", 1, 100, "XXXXXXX")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("%v \n", *lws)
+
 	fmt.Printf("%d \n", tp)
+	for _, v := range *lws {
+		fmt.Printf("%v \n", v)
+	}
+
 }
